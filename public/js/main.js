@@ -36,26 +36,34 @@ const Game = {
         });
     },
 
-    examine: function(objet) {
+   examine: function(objet) {
         if (objet === 'flyer') {
-            // 1. Feedback visuel (Animation Anime.js)
+            // 1. Petit effet visuel sur l'objet au sol (feedback)
             anime({
                 targets: '#item-flyer',
-                scale: [1, 1.5, 0], // Grossit puis disparait
-                duration: 500,
-                easing: 'easeInOutQuad'
+                scale: [1, 1.2, 1],
+                duration: 300
             });
 
-            // 2. Afficher l'info au joueur
-            // Plus tard, tu pourras faire une belle modale HTML. 
-            // Pour l'instant, une alerte suffit pour avancer.
-            setTimeout(() => {
-                alert("Vous ramassez un flyer froissé...\n\nCONCOURS CE SOIR AVANT MINUIT !\nCode d'entrée du studio : 1204");
-                
-                // 3. Ajouter à l'inventaire visuel (optionnel)
-                document.getElementById('inventory').innerHTML += '<div class="inv-item">Flyer</div>';
-            }, 500);
+            // 2. Remplir la modale avec les infos du Flyer
+            const modalImg = document.getElementById('modal-img');
+            const modalDesc = document.getElementById('modal-desc');
+            const overlay = document.getElementById('modal-overlay');
+
+            // C'est ici que tu définis l'image "Zoomée" (je te la donne juste après)
+            modalImg.src = 'asset/img/indice_flyer_zoom.png'; 
+            
+            // Le texte qui s'affiche sous l'image
+            modalDesc.innerHTML = "Un flyer froissé trouvé par terre.<br>On peut y lire une date griffonnée : <strong style='color:yellow'>1204</strong>";
+
+            // 3. Afficher la modale
+            overlay.classList.remove('hidden');
         }
+    },
+
+    closeModal: function() {
+        // Cacher la modale
+        document.getElementById('modal-overlay').classList.add('hidden');
     }
 };
 

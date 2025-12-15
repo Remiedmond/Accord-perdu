@@ -10,6 +10,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   </head>
   <body>
+    <div id="modal-overlay" class="hidden" onclick="Game.closeModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-btn-modal" onclick="Game.closeModal()">X</button>
+
+        <img id="modal-img" src="" alt="info" />
+
+        <p id="modal-desc"></p>
+      </div>
+    </div>
+
     <div id="ui-layer">
       <div id="timer">23:55</div>
       <div id="inventory"></div>
@@ -38,14 +48,18 @@
           <button onclick="Puzzles.typeCode(1)">1</button>
           <button onclick="Puzzles.typeCode(2)">2</button>
           <button onclick="Puzzles.typeCode(3)">3</button>
+
           <button onclick="Puzzles.typeCode(4)">4</button>
           <button onclick="Puzzles.typeCode(5)">5</button>
           <button onclick="Puzzles.typeCode(6)">6</button>
+
           <button onclick="Puzzles.typeCode(7)">7</button>
           <button onclick="Puzzles.typeCode(8)">8</button>
           <button onclick="Puzzles.typeCode(9)">9</button>
+
+          <button class="btn-reset" onclick="Puzzles.resetCode()">C</button>
           <button onclick="Puzzles.typeCode(0)">0</button>
-          <button onclick="Puzzles.validateCode()">OK</button>
+          <button class="btn-ok" onclick="Puzzles.validateCode()">OK</button>
         </div>
         <button class="close-btn" onclick="Puzzles.closeDigicode()">X</button>
       </div>

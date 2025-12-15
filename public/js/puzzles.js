@@ -1,22 +1,21 @@
+/* Fichier: js/puzzle.js */
+
 const Puzzles = {
   codeSaisi: "",
-  codeSecret: "1204", // Le code donné par le papier
+  codeSecret: "1204",
 
-  // Fonction appelée quand on clique sur la zone rouge de la porte
+  // Ouvre le digicode
   openDigicode: function () {
-    console.log("Ouverture du digicode...");
-    // On enlève la classe 'hidden' pour afficher l'écran noir par dessus
     document.getElementById("overlay-digicode").classList.remove("hidden");
   },
 
-  // Fonction pour fermer (bouton X)
+  // Ferme le digicode et remet à zéro
   closeDigicode: function () {
     document.getElementById("overlay-digicode").classList.add("hidden");
-    this.codeSaisi = "";
-    this.updateScreen();
+    this.resetCode();
   },
 
-  // Quand on appuie sur les touches
+  // Fonction pour taper un chiffre
   typeCode: function (chiffre) {
     if (this.codeSaisi.length < 4) {
       this.codeSaisi += chiffre;
@@ -24,166 +23,60 @@ const Puzzles = {
     }
   },
 
-  // Mettre à jour l'affichage "_ _ _ _"
-  updateScreen: function () {
-    document.getElementById("digicode-screen").innerText = this.codeSaisi;
+  // --- NOUVELLE FONCTION : Bouton "C" (Corriger) ---
+  resetCode: function () {
+    this.codeSaisi = "";
+    this.updateScreen();
   },
 
-  // Bouton OK
-  validateCode: function () {
-    if (this.codeSaisi === this.codeSecret) {
-      alert("Accès autorisé !"); // Petit feedback
-      this.closeDigicode();
+  // Met à jour l'écran du digicode
+  updateScreen: function () {
+    // Affiche des tirets si vide, ou le code tapé
+    const screen = document.getElementById("digicode-screen");
+    screen.innerText = this.codeSaisi === "" ? "_ _ _ _" : this.codeSaisi;
+  },
 
-      // LA MAGIE : On change de scène vers le studio
-      Game.changeScene("scene-studio");
+  // Validation du code avec la MODALE
+  validateCode: function () {
+    const modalOverlay = document.getElementById("modal-overlay");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalImg = document.getElementById("modal-img");
+
+    if (this.codeSaisi === this.codeSecret) {
+      // --- CAS 1 : SUCCÈS ---
+
+      // 1. On prépare la modale "Succès"
+      modalImg.style.display = "none"; // On cache l'image (pas besoin d'image ici)
+      modalDesc.innerHTML =
+        "<h2 style='color:#0f0'>ACCÈS AUTORISÉ</h2><p>Bienvenue au Studio.</p>";
+
+      // 2. On affiche la modale
+      modalOverlay.classList.remove("hidden");
+
+      // 3. Après 2 secondes, on ferme tout et on change de salle
+      setTimeout(() => {
+        modalOverlay.classList.add("hidden"); // Ferme la modale
+        this.closeDigicode(); // Ferme le digicode
+        Game.changeScene("scene-studio"); // Change la scène !
+      }, 2000);
     } else {
-      alert("Code Erroné !");
-      this.codeSaisi = "";
-      this.updateScreen();
+      // --- CAS 2 : ERREUR ---
+
+      // 1. On secoue l'écran (Feedback visuel avec Anime.js)
+      anime({
+        targets: ".digicode-container",
+        translateX: [{ value: -10 }, { value: 10 }, { value: 0 }],
+        duration: 300,
+      });
+
+      // 2. On affiche la modale "Erreur"
+      modalImg.style.display = "none"; // On cache l'image
+      modalDesc.innerHTML =
+        "<h2 style='color:red'>ERREUR</h2><p>Code incorrect.</p>";
+      modalOverlay.classList.remove("hidden");
+
+      // 3. On efface le code pour recommencer
+      this.resetCode();
     }
   },
 };
-// --- GESTION DU DRAG & DROP (Pour le Studio) ---
-// À mettre dans main.js ou ici.
-// Le principe : Les objets de l'inventaire sont "draggable"
-// Les slots du PC sont des zones de "drop".
-
-/* Exemple simplifié pour le Drag & Drop HTML5 natif */
-/*
-1. Sur les items de l'inventaire : draggable="true" et ondragstart="drag(event)"
-2. Sur les zones cibles : ondrop="drop(event)" et ondragover="allowDrop(event)"
-*/
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  // Vérifier si c'est le bon instrument pour la bonne case
-  ev.target.appendChild(document.getElementById(data));
-
-  // Vérifier victoire (si les 3 slots sont pleins)
-}
-// --- GESTION DU DRAG & DROP (Pour le Studio) ---
-// À mettre dans main.js ou ici.
-// Le principe : Les objets de l'inventaire sont "draggable"
-// Les slots du PC sont des zones de "drop".
-
-/* Exemple simplifié pour le Drag & Drop HTML5 natif */
-/*
-1. Sur les items de l'inventaire : draggable="true" et ondragstart="drag(event)"
-2. Sur les zones cibles : ondrop="drop(event)" et ondragover="allowDrop(event)"
-*/
-
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  // Vérifier si c'est le bon instrument pour la bonne case
-  ev.target.appendChild(document.getElementById(data));
-
-  // Vérifier victoire (si les 3 slots sont pleins)
-
-  // -- OPTION 2 -- //
-  document.addEventListener("DOMContentLoaded", (event) => {
-    gsap.registerPlugin(MorphSVGPlugin, ScrollTrigger, SplitText);
-
-    /* MOUVEMENT POKEMON */
-    gsap.to(".pokemon", {
-      duration: 2,
-      y: -30,
-      repeat: -1, // boucle à l'infini
-      yoyo: true, // fait l'aller-retour (-50 -> 0 -> -50)
-      ease: "sine.inOut",
-    });
-
-    const pokeballLinks = document.querySelectorAll(".actions > a");
-
-    let activeBall = null; // { el, rect }
-    let following = false;
-    let setX, setY;
-
-    function resetBall(ball) {
-      if (!ball) return;
-      gsap.to(ball.el, {
-        x: 0,
-        y: 0,
-        duration: 0.3,
-        ease: "back.out",
-      });
-    }
-
-    pokeballLinks.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        const pokeball = link.querySelector(".pokeball");
-        const pokeballBtn = link.querySelector(".pokeball-button");
-        const linkRect = link.getBoundingClientRect();
-
-        // Si on reclique sur la même pokeball et qu'elle suit déjà : on stoppe
-        if (activeBall && activeBall.el === pokeball && following) {
-          resetBall(activeBall);
-          following = false;
-          activeBall = null;
-          return;
-        }
-
-        // 1. remettre la précédente en place
-        resetBall(activeBall);
-        following = false;
-
-        // 2. centrer la nouvelle (point de départ)
-        gsap.set([pokeball, pokeballBtn], { x: 0, y: 0 });
-
-        // 3. définir la nouvelle active
-        setX = gsap.quickSetter(pokeball, "x", "px");
-        setY = gsap.quickSetter(pokeball, "y", "px");
-
-        activeBall = { el: pokeball, rect: linkRect };
-        following = true;
-      });
-    });
-
-    window.addEventListener("mousemove", (e) => {
-      if (!following || !activeBall) return;
-
-      const rect = activeBall.rect;
-
-      const offsetX = e.clientX - (rect.left + rect.width / 2);
-      const offsetY = e.clientY - (rect.top + rect.height / 2);
-
-      setX(offsetX);
-      setY(offsetY);
-    });
-
-    window.addEventListener("mouseleave", () => {
-      resetBall(activeBall);
-      following = false;
-    });
-
-    const pokemonLink = document.querySelector(".pokemon-link");
-    if (pokemonLink) {
-      pokemonLink.addEventListener("click", () => {
-        // la pokeball arrête de suivre et revient à sa position d'origine
-        resetBall(activeBall);
-        following = false;
-        activeBall = null;
-      });
-    }
-  });
-}
