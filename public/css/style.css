@@ -1,0 +1,59 @@
+:root {
+    --pixel-font: 'Courier New', monospace; /* Remplacez par une Google Font Pixel */
+}
+
+body {
+    margin: 0;
+    overflow: hidden; /* Pas de scroll */
+    background: #000;
+    font-family: var(--pixel-font);
+    user-select: none; /* Empêche de sélectionner le texte/images */
+}
+
+/* GESTION PIXEL ART */
+img {
+    image-rendering: pixelated;
+    pointer-events: none; /* Pour cliquer à travers l'image de fond si besoin */
+}
+
+/* SYSTÈME DE SCÈNES */
+.scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    pointer-events: none; /* On ne peut pas cliquer si c'est caché */
+    transition: opacity 0.5s ease;
+}
+
+.scene.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit l'écran */
+}
+
+/* HITBOXES (Zones interactives) */
+.hitbox {
+    position: absolute;
+    /* border: 1px solid red;  <-- DECOMMENTER POUR LE DEBUG */
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.hitbox:hover {
+    transform: scale(1.05); /* Petit effet visuel au survol */
+    filter: drop-shadow(0 0 5px yellow); /* Lueur */
+}
+
+/* Positionnement spécifique (A ajuster par le Web 1) */
+#item-flyer { bottom: 10%; left: 20%; width: 50px; height: 50px; }
+#door-zone { top: 30%; right: 15%; width: 120px; height: 250px; }
+
+.hidden { display: none !important; }

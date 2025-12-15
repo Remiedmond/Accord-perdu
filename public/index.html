@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accord perdu</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div id="timer">23:55</div> <div id="inventory">
+            </div>
+    </div>
+
+    <section id="scene-ruelle" class="scene active">
+        <img src="assets/img/bg_ruelle.png" class="bg-img" alt="Ruelle">
+        
+        <div id="item-flyer" class="hitbox interactable" onclick="Game.examine('flyer')"></div>
+        
+        <div id="door-zone" class="hitbox interactable" onclick="Puzzles.openDigicode()"></div>
+    </section>
+
+    <div id="overlay-digicode" class="overlay hidden">
+        <div class="digicode-container">
+            <div id="digicode-screen">_ _ _ _</div>
+            <div class="keypad">
+                <button onclick="Puzzles.typeCode(1)">1</button>
+                <button onclick="Puzzles.typeCode(2)">2</button>
+                <button onclick="Puzzles.typeCode(3)">3</button>
+                <button onclick="Puzzles.typeCode(4)">4</button>
+                <button onclick="Puzzles.typeCode(5)">5</button>
+                <button onclick="Puzzles.typeCode(6)">6</button>
+                <button onclick="Puzzles.typeCode(7)">7</button>
+                <button onclick="Puzzles.typeCode(8)">8</button>
+                <button onclick="Puzzles.typeCode(9)">9</button>
+                <button onclick="Puzzles.typeCode(0)">0</button>
+                <button onclick="Puzzles.validateCode()">OK</button>
+            </div>
+            <button class="close-btn" onclick="Puzzles.closeDigicode()">X</button>
+        </div>
+    </div>
+
+    <section id="scene-studio" class="scene hidden">
+        <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio">
+        
+        <div id="daw-screen" class="hitbox">
+            <div class="drop-zone" data-type="drums">Batterie</div>
+            <div class="drop-zone" data-type="bass">Basse</div>
+            <div class="drop-zone" data-type="melody">Mélodie</div>
+        </div>
+    </section>
+
+    <script src="js/main.js"></script>
+    <script src="js/puzzles.js"></script>
+</body>
+</html>

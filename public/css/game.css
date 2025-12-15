@@ -1,0 +1,71 @@
+/* Dans css/game.css */
+
+/* La zone du PAPIER (Indice) */
+#item-flyer {
+    position: absolute;
+    bottom: 12%;       /* Ajuste ce chiffre pour monter/descendre */
+    left: 45%;         /* Ajuste ce chiffre pour aller gauche/droite */
+    width: 60px;       /* Largeur de la zone */
+    height: 40px;      /* Hauteur de la zone */
+    border: 2px solid red; /* <--- SUPPRIME CETTE LIGNE À LA FIN */
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* La zone de la PORTE (Digicode) */
+#door-zone {
+    position: absolute;
+    top: 35%;
+    right: 28%;        /* Ajuste selon ton dessin */
+    width: 80px;
+    height: 120px;
+    border: 2px solid red; /* <--- SUPPRIME CETTE LIGNE À LA FIN */
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* css/game.css */
+
+/* L'écran noir qui recouvre tout le jeu */
+#overlay-digicode {
+    position: fixed;      /* Reste fixe par dessus tout */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9); /* Fond NOIR presque opaque */
+    z-index: 9999;        /* Niveau très haut pour être sûr d'être devant */
+    
+    /* Pour centrer le pavé numérique au milieu de l'écran */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* La boîte du clavier elle-même */
+.digicode-container {
+    background-color: #333;
+    padding: 20px;
+    border: 4px solid #fff;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-family: monospace;
+}
+
+/* Les boutons */
+.keypad button {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    background: #000;
+    color: #0f0; /* Vert hacker */
+    border: 1px solid #0f0;
+}
+
+/* IMPORTANT : La classe pour cacher */
+.hidden {
+    display: none !important;
+}
