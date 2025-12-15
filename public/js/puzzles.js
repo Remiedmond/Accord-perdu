@@ -58,7 +58,7 @@ const Puzzles = {
         modalOverlay.classList.add("hidden"); // Ferme la modale
         this.closeDigicode(); // Ferme le digicode
         Game.changeScene("scene-studio"); // Change la scène !
-      }, 2000);
+      }, 1000);
     } else {
       // --- CAS 2 : ERREUR ---
 

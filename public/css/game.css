@@ -3,11 +3,10 @@
 /* La zone du PAPIER (Indice) */
 #item-flyer {
     position: absolute;
-    bottom: 12%;       /* Ajuste ce chiffre pour monter/descendre */
-    left: 45%;         /* Ajuste ce chiffre pour aller gauche/droite */
-    width: 60px;       /* Largeur de la zone */
-    height: 40px;      /* Hauteur de la zone */
-    border: 2px solid red; /* <--- SUPPRIME CETTE LIGNE À LA FIN */
+    bottom: 4%;       /* Ajuste ce chiffre pour monter/descendre */
+    left: 32%;         /* Ajuste ce chiffre pour aller gauche/droite */
+    width: 170px;       /* Largeur de la zone */
+    height: 70px;      /* Hauteur de la zone */
     cursor: pointer;
     z-index: 10;
 }
@@ -15,11 +14,10 @@
 /* La zone de la PORTE (Digicode) */
 #door-zone {
     position: absolute;
-    top: 35%;
-    right: 28%;        /* Ajuste selon ton dessin */
-    width: 80px;
-    height: 120px;
-    border: 2px solid red; /* <--- SUPPRIME CETTE LIGNE À LA FIN */
+    top: 26%;
+    right: 26%;        /* Ajuste selon ton dessin */
+    width: 60px;
+    height: 90px;
     cursor: pointer;
     z-index: 10;
 }
@@ -150,4 +148,84 @@
 
 .close-btn-modal:hover {
     transform: scale(1.1);
+}
+
+/* --- LE BLACKOUT DU STUDIO --- */
+#studio-darkness {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.92); /* Presque noir complet */
+    pointer-events: none; /* Permet de cliquer à travers */
+    z-index: 50;
+    transition: opacity 2s ease;
+}
+
+/* --- LES FUSIBLES --- */
+.draggable-fuse {
+    width: 25px; height: 40px;
+    background: #f1c40f; /* Jaune */
+    border: 2px solid white;
+    position: absolute;
+    z-index: 60; /* Au-dessus du noir */
+    cursor: grab;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 15px #f1c40f; /* Lueur pour les voir dans le noir */
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 5px #f1c40f; }
+    to { box-shadow: 0 0 20px #f1c40f; }
+}
+
+/* Positions des cachettes (Ajuste selon ton image bg_studio !) */
+#fuse-1 { bottom: 10%; left: 20%; }  /* Sous la table */
+#fuse-2 { top: 30%; right: 10%; }    /* Sur une enceinte */
+#fuse-3 { top: 10%; left: 40%; }     /* Sur une étagère */
+
+/* --- LE COMPTEUR AU MUR --- */
+#fuse-box {
+    position: absolute;
+    top: 20%; left: 5%; /* Sur le mur de gauche */
+    width: 80px; height: 100px;
+    background: #333;
+    border: 2px solid #666;
+    z-index: 60; /* Visible dans le noir */
+    display: flex; flex-direction: column; 
+    justify-content: space-around; align-items: center;
+}
+
+.slot-light {
+    width: 60%; height: 10px;
+    background: #000;
+    border-radius: 2px;
+}
+
+
+/* L'Écran de démarrage (Centré) */
+#boot-overlay {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    min-width: 100%; /* Taille de l'image */
+    height: 100%;
+    z-index: 200; /* Au-dessus de tout */
+    border: 5px solid #222;
+    box-shadow: 0 0 50px rgba(0, 255, 0, 0.2);
+    background: black;
+}
+
+#boot-overlay img {
+    width: 100%;
+    height: 90%;
+    display: block;
+}
+
+/* Petite barre de chargement verte en bas */
+.loading-bar {
+    width: 0%;
+    height: 10px;
+    background-color: #0f0;
+    box-shadow: 0 0 10px #0f0;
+    transition: width 3s linear; /* Animation CSS simple */
 }

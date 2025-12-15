@@ -66,19 +66,38 @@
       </div>
     </div>
 
-   <section id="scene-studio" class="scene hidden">
-        <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio">
+    <div id="blackout-overlay"></div>
+
+    <section id="scene-studio" class="scene hidden">
+    <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio">
+    
+    <div id="studio-darkness"></div>
+
+    <div id="fuse-box" class="dropzone-fuse">
+        <div class="slot-light"></div>
+        <div class="slot-light"></div>
+        <div class="slot-light"></div>
+    </div>
+
+    <div id="fuse-1" class="draggable-fuse">⚡</div>
+    <div id="fuse-2" class="draggable-fuse">⚡</div>
+    <div id="fuse-3" class="draggable-fuse">⚡</div>
+
+    <div id="boot-overlay" class="hidden">
+    <img src="assets/img/screen_boot.png" alt="Booting System...">
+    <div class="loading-bar"></div> </div>
+   
         
         <div id="drop-drums" class="dropzone" data-accept="drag-drums">Batterie</div>
         <div id="drop-bass" class="dropzone" data-accept="drag-bass">Basse</div>
         <div id="drop-melody" class="dropzone" data-accept="drag-melody">Mélodie</div>
 
         <div id="tracks-rack">
-            <div id="drag-drums" class="draggable-item track-drums">🥁 Batterie</div>
-            <div id="drag-bass" class="draggable-item track-bass">🎸 Basse</div>
-            <div id="drag-melody" class="draggable-item track-melody">🎹 Mélodie</div>
+            <div id="drag-drums" class="draggable-item track-drums"> Batterie</div>
+            <div id="drag-bass" class="draggable-item track-bass"> Basse</div>
+            <div id="drag-melody" class="draggable-item track-melody"> Mélodie</div>
         </div>
-    </section>
+</section>
 
     <script src="js/main.js"></script>
     <script src="js/puzzles.js"></script>

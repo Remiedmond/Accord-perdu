@@ -119,3 +119,97 @@ function checkVictory() {
         }, 500);
     }
 }
+
+
+/* --- LOGIQUE FUSIBLES (STUDIO) --- */
+
+let fusesFixed = 0; // Compteur
+
+// 1. Rendre les fusibles bougeables
+interact('.draggable-fuse').draggable({
+    inertia: true,
+    modifiers: [ interact.modifiers.restrictRect({ restriction: '#scene-studio' }) ],
+    autoScroll: true,
+    listeners: { move: dragMoveListener }
+});
+
+// 2. Zone de dépôt (Le compteur)
+interact('.dropzone-fuse').dropzone({
+    accept: '.draggable-fuse',
+    overlap: 0.50,
+    
+    ondrop: function (event) {
+        // On cache le fusible qu'on vient de lâcher
+        event.relatedTarget.style.display = 'none';
+        
+        // On allume une petite lumière sur le compteur (feedback)
+        const slots = document.querySelectorAll('.slot-light');
+        if(slots[fusesFixed]) slots[fusesFixed].style.background = "#0f0"; // Vert
+        
+        fusesFixed++;
+
+        // Si on a les 3
+        if (fusesFixed === 3) {
+            turnPowerOn();
+        }
+    }
+});
+
+function turnPowerOn() {
+    // 1. Son d'électricité (si tu as)
+    // new Audio('asset/audio/startup.mp3').play();
+
+    // 2. On enlève le noir (Lumière revient)
+    anime({
+        targets: '#studio-darkness',
+        opacity: 0,
+        duration: 1500,
+        easing: 'linear',
+        complete: () => {
+            document.getElementById('studio-darkness').style.display = 'none';
+            
+            // 3. LANCEMENT DU DÉMARRAGE ORDI
+            startComputerBoot();
+        }
+    });
+}
+
+function startComputerBoot() {
+    const bootScreen = document.getElementById('boot-overlay');
+    const loadingBar = document.querySelector('.loading-bar');
+
+    // Affiche l'écran de boot
+    bootScreen.classList.remove('hidden');
+
+    // Lance l'animation de la barre de chargement (CSS width)
+    // Petit délai pour que le navigateur prenne en compte l'affichage
+    setTimeout(() => {
+        loadingBar.style.width = "100%";
+    }, 100);
+
+    // 4. Une fois le chargement fini (3 secondes plus tard)
+    setTimeout(() => {
+        // On cache l'écran de boot
+        bootScreen.classList.add('hidden');
+        
+        // On affiche ENFIN le rack de musique et l'écran interactif
+        showMusicInterface();
+
+    }, 3500); // 3.5 secondes d'attente
+}
+
+function showMusicInterface() {
+    const rack = document.getElementById('tracks-rack');
+    rack.classList.remove('hidden');
+    
+    // Animation d'entrée du rack (il monte du bas)
+    anime({
+        targets: '#tracks-rack',
+        translateY: [100, 0], 
+        opacity: [0, 1],
+        duration: 800,
+        easing: 'easeOutExpo'
+    });
+
+    alert("Système opérationnel. Placez les pistes pour lancer le mix !");
+}
