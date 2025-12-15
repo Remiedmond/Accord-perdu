@@ -57,3 +57,83 @@ img {
 #door-zone { top: 30%; right: 15%; width: 120px; height: 250px; }
 
 .hidden { display: none !important; }
+
+
+
+/* --- SCÈNE 2 : LE STUDIO --- */
+
+/* Le rack en bas où sont stockés les sons au début */
+#tracks-rack {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    background: rgba(0,0,0,0.5);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #555;
+}
+
+/* Les objets qu'on déplace (Les pistes) */
+.draggable-item {
+    width: 100px;
+    height: 60px;
+    background: linear-gradient(to bottom, #444, #222);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #888;
+    border-radius: 5px;
+    cursor: grab;
+    user-select: none;
+    font-size: 14px;
+    touch-action: none; /* Indispensable pour Interact.js sur tactile/mobile */
+    z-index: 100; /* Doit être au-dessus de tout */
+}
+
+/* Couleurs spécifiques par instrument */
+.track-drums { border-color: #e74c3c; } /* Rouge */
+.track-bass { border-color: #3498db; }  /* Bleu */
+.track-melody { border-color: #f1c40f; } /* Jaune */
+
+/* --- LES ZONES CIBLES (SUR L'ÉCRAN) --- */
+
+/* Style de base des zones de dépôt */
+.dropzone {
+    position: absolute;
+    width: 150px; /* Ajuste selon ton image */
+    height: 40px; /* Ajuste selon ton image */
+    border: 2px dashed rgba(255, 255, 255, 0.3); /* Pointillés pour voir où poser */
+    color: rgba(255,255,255,0.5);
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Positionnement précis sur l'écran de l'ordi (À ajuster !) */
+#drop-drums { top: 25%; right: 25%; }
+#drop-bass { top: 35%; right: 25%; }
+#drop-melody { top: 45%; right: 25%; }
+
+/* Quand on survole une zone avec le bon objet */
+.dropzone-active {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-color: #0f0;
+}
+
+.draggable-item {
+    /* ... tes autres styles ... */
+    
+    position: relative; /* Ou absolute selon ton layout */
+    z-index: 9999 !important; /* <--- AJOUTE ÇA */
+    touch-action: none;       /* <--- OBLIGATOIRE pour Interact.js sur Chrome */
+}
+
+/* Vérifie aussi que le conteneur est au-dessus */
+#tracks-rack {
+    z-index: 9990;
+}

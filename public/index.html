@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/game.css" />
     <link rel="stylesheet" href="css/systems.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
   <body>
     <div id="modal-overlay" class="hidden" onclick="Game.closeModal()">
@@ -65,19 +66,24 @@
       </div>
     </div>
 
-    <section id="scene-studio" class="scene hidden">
-      <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio" />
+   <section id="scene-studio" class="scene hidden">
+        <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio">
+        
+        <div id="drop-drums" class="dropzone" data-accept="drag-drums">Batterie</div>
+        <div id="drop-bass" class="dropzone" data-accept="drag-bass">Basse</div>
+        <div id="drop-melody" class="dropzone" data-accept="drag-melody">Mélodie</div>
 
-      <div id="daw-screen" class="hitbox">
-        <div class="drop-zone" data-type="drums">Batterie</div>
-        <div class="drop-zone" data-type="bass">Basse</div>
-        <div class="drop-zone" data-type="melody">Mélodie</div>
-      </div>
+        <div id="tracks-rack">
+            <div id="drag-drums" class="draggable-item track-drums">🥁 Batterie</div>
+            <div id="drag-bass" class="draggable-item track-bass">🎸 Basse</div>
+            <div id="drag-melody" class="draggable-item track-melody">🎹 Mélodie</div>
+        </div>
     </section>
 
     <script src="js/main.js"></script>
     <script src="js/puzzles.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/hints.js"></script>
+    <script src="js/drag_logic.js"></script>
   </body>
 </html>
