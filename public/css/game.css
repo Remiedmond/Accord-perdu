@@ -3,15 +3,14 @@
 /* La zone du PAPIER (Indice) */
 #item-flyer {
     position: absolute;
-    bottom: 4%;       /* Ajuste ce chiffre pour monter/descendre */
-    left: 32%;         /* Ajuste ce chiffre pour aller gauche/droite */
-    width: 170px;       /* Largeur de la zone */
-    height: 70px;      /* Hauteur de la zone */
+    bottom: 4%;       
+    left: 32%;         
+    width: 170px;      
+    height: 70px;      
     cursor: pointer;
     z-index: 10;
 }
 
-/* La zone de la PORTE (Digicode) */
 #door-zone {
     position: absolute;
     top: 26%;
