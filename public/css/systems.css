@@ -1,0 +1,440 @@
+/* ============================================
+   STYLES POUR TIMER ET SYSTÈME D'INDICES
+   À inclure dans votre HTML : <link rel="stylesheet" href="css/systems.css">
+   ============================================ */
+
+/* ========== TIMER ========== */
+.timer-display {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #00ff00;
+  z-index: 1000;
+  font-family: "Courier New", monospace;
+  transition: all 0.3s;
+}
+
+.timer-display.critical {
+  color: #ff0000;
+  text-shadow: 0 0 15px #ff0000;
+  border-color: #ff0000;
+  animation: timer-pulse 1s infinite;
+}
+
+@keyframes timer-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Notifications du timer */
+.timer-notification {
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: "Courier New", monospace;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.timer-notif-bonus {
+  background: linear-gradient(135deg, #00ff00, #00cc00);
+  color: white;
+  border: 2px solid #00ff00;
+}
+
+.timer-notif-penalty {
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  color: white;
+  border: 2px solid #ff0000;
+}
+
+.timer-notif-warning {
+  background: linear-gradient(135deg, #ffaa00, #ff8800);
+  color: white;
+  border: 2px solid #ffaa00;
+  font-size: 18px;
+}
+
+/* Modal du timer (Game Over / Victory) */
+.timer-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.timer-modal-container {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  padding: 40px;
+  border-radius: 20px;
+  border: 4px solid #00d9ff;
+  max-width: 500px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
+}
+
+.timer-modal-container h2 {
+  font-size: 36px;
+  margin: 0 0 20px 0;
+  color: #00d9ff;
+  text-shadow: 0 0 15px rgba(0, 217, 255, 0.8);
+}
+
+.timer-modal-body {
+  font-size: 18px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.timer-modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.timer-modal-btn {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00d9ff, #0099cc);
+  color: white;
+  transition: all 0.3s;
+  font-family: "Courier New", monospace;
+}
+
+.timer-modal-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(0, 217, 255, 0.6);
+}
+
+/* ========== SYSTÈME D'INDICES ========== */
+
+/* Bouton d'indice */
+#hint-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+  transition: all 0.3s;
+  border: 3px solid white;
+}
+
+#hint-button:hover {
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.8);
+}
+
+#hint-button:active {
+  transform: scale(0.95);
+}
+
+/* Affichage des pièces */
+#coins-display {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 10px #ffd700;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #ffd700;
+  z-index: 1000;
+  font-family: "Courier New", monospace;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pièces collectibles */
+.coin-collectible {
+  position: absolute;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 100;
+  filter: drop-shadow(0 0 8px gold);
+  animation: coin-float 2s ease-in-out infinite;
+  transition: transform 0.2s;
+}
+
+.coin-collectible:hover {
+  transform: scale(1.3) rotate(360deg);
+  filter: drop-shadow(0 0 15px gold);
+}
+
+@keyframes coin-float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(180deg);
+  }
+}
+
+/* Modal d'indices */
+.hint-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.hint-modal-container {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  padding: 30px;
+  border-radius: 15px;
+  border: 3px solid #00d9ff;
+  max-width: 550px;
+  width: 90%;
+  position: relative;
+  color: white;
+  box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+}
+
+.hint-modal-container h2 {
+  margin: 0 0 20px 0;
+  font-size: 28px;
+  text-align: center;
+  color: #00d9ff;
+  text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}
+
+.hint-modal-body {
+  margin-bottom: 20px;
+}
+
+.hint-modal-content h3 {
+  color: #ffd700;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.hint-current {
+  background: rgba(0, 217, 255, 0.15);
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #00d9ff;
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.hint-next-option {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+  border: 2px dashed #ffd700;
+}
+
+.hint-next-option p {
+  margin: 10px 0;
+}
+
+.hint-cost-coins {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.hint-cost-time {
+  color: #ff6666;
+  font-weight: bold;
+}
+
+.hint-max-level {
+  color: #00ff00;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.hint-modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.hint-modal-btn {
+  padding: 12px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  font-family: "Courier New", monospace;
+}
+
+.btn-pay-coins {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+}
+
+.btn-pay-coins:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
+}
+
+.btn-pay-time {
+  background: linear-gradient(135deg, #ff4444, #ff6b6b);
+  color: white;
+}
+
+.btn-pay-time:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.6);
+}
+
+.btn-close {
+  background: linear-gradient(135deg, #666, #888);
+  color: white;
+}
+
+.btn-close:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #888, #aaa);
+}
+
+.hint-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s;
+  font-weight: bold;
+}
+
+.hint-modal-close:hover {
+  background: rgba(255, 0, 0, 0.8);
+  transform: rotate(90deg);
+}
+
+/* Notifications d'indices */
+.hint-notification {
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 9999;
+  font-family: "Courier New", monospace;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hint-notif-coins {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  border: 2px solid #ffd700;
+}
+
+.hint-notif-objective {
+  background: linear-gradient(135deg, #00d9ff, #0099cc);
+  color: white;
+  border: 2px solid #00d9ff;
+}
+
+.hint-notif-info {
+  background: linear-gradient(135deg, #888, #666);
+  color: white;
+  border: 2px solid #aaa;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .timer-display {
+    font-size: 24px;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+  }
+
+  #coins-display {
+    font-size: 20px;
+    top: 10px;
+    left: 10px;
+    padding: 8px 15px;
+  }
+
+  #hint-button {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .hint-modal-container,
+  .timer-modal-container {
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  .hint-modal-container h2,
+  .timer-modal-container h2 {
+    font-size: 22px;
+  }
+
+  .hint-current {
+    font-size: 16px;
+    padding: 15px;
+  }
+
+  .coin-collectible {
+    font-size: 20px;
+  }
+}
