@@ -180,9 +180,6 @@ const RuelleGame = {
     this.showThought("Il y a un tag dans cette poubelle.");
 
     setTimeout(() => {
-      poubelle.style.background = "rgba(46, 204, 113, 0.3)";
-      poubelle.style.border = "2px solid #2ecc71";
-
       this.checkRetirerGants(gants);
     }, 600);
   },
@@ -200,8 +197,6 @@ const RuelleGame = {
 
     setTimeout(() => {
       if (typeof HintSystem !== "undefined") HintSystem.addCoins(1);
-      poubelle.style.background = "rgba(241, 196, 15, 0.3)";
-      poubelle.style.border = "2px solid #f1c40f";
       this.checkRetirerGants(gants);
     }, 600);
   },

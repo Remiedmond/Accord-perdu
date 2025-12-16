@@ -81,22 +81,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px dashed rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
-}
-
-.dropzone-active {
-  border-color: #2ecc71 !important;
-  border-style: solid !important;
-  background: rgba(46, 204, 113, 0.3) !important;
-  transform: scale(1.1);
 }
 
 /* ========== GOUTTIÈRE SECRÈTE ========== */
 #goutiere-secret {
-  right: 20%;
+  right: 16%;
   top: 60%;
   width: 20px;
   height: 20px;
