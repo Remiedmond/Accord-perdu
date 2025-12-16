@@ -48,7 +48,6 @@ const HintSystem = {
   init: function () {
     this.createHintButton();
     this.createCoinsDisplay();
-    this.generateCoins();
     console.log("💡 Système d'indices initialisé");
   },
 
