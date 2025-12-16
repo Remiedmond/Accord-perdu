@@ -27,32 +27,67 @@
     </div>
 
     <section id="scene-accueil" class="scene active">
-  <div class="video-container">
-    <video 
-      id="intro-video"
-      src="assets/video/accueil.mp4" 
-      autoplay 
-      muted 
-      playsinline
-      onclick="Game.startGame()"
-      onended="Game.startGame()"
-    ></video>
-  
-  </div>
-</section>
+      <div class="video-container">
+        <video
+          id="intro-video"
+          src="assets/video/accueil.mp4"
+          autoplay
+          muted
+          playsinline
+          onclick="Game.startGame()"
+          onended="Game.startGame()"
+        ></video>
+      </div>
+    </section>
 
     <section id="scene-ruelle" class="scene hidden">
       <img src="assets/img/bg_ruelle.png" class="bg-img" alt="Ruelle" />
 
+      <!-- à enlever quand Décor fait -->
+      <!-- Lettre B - Poteau -->
+      <div id="poteau-lettre-b" class="zone-interactive zone-lettre">
+        <span class="lettre-hint">B</span>
+      </div>
+
+      <!-- Flyer -->
+      <div id="item-flyer" class="zone-interactive"></div>
+
+      <!-- Gants -->
+      <div id="gants-item" class="gants-draggable zone-interactive">🧤</div>
+
+      <!-- Poubelle milieu - GARDE le style inline -->
       <div
-        id="item-flyer"
-        class="hitbox interactable"
-        onclick="Game.examine('flyer')"
+        id="poubelle-milieu"
+        class="poubelle dropzone"
+        style="left: 40%; bottom: 45%; width: 80px; height: 150px"
+      >
+        🗑️
+      </div>
+
+      <!-- Poubelle droite - GARDE le style inline -->
+      <div
+        id="poubelle-droite"
+        class="poubelle dropzone"
+        style="right: 7%; bottom: 55%; width: 130px; height: 80px"
       ></div>
 
+      <!-- Gouttière secrète -->
+      <div id="goutiere-secret" class="zone-interactive"></div>
+
+      <!-- à enlever quand Décor fait -->
+      <!-- Tag mur -->
+      <div id="tag-mur" class="zone-interactive zone-tag">
+        <div class="tag-content">
+          <div style="color: #e74c3c; font-size: 20px">B=2</div>
+          <div style="color: #3498db; font-size: 20px">F=6</div>
+          <div style="color: #f39c12; font-size: 20px">L=12</div>
+        </div>
+      </div>
+
+      <!-- Porte -->
       <div
         id="door-zone"
-        class="hitbox interactable"
+        class="zone-interactive"
         onclick="Puzzles.openDigicode()"
       ></div>
     </section>
@@ -84,55 +119,74 @@
     <div id="blackout-overlay"></div>
 
     <section id="scene-studio" class="scene hidden">
-    <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio">
-    
-    <div id="studio-darkness"></div>
+      <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio" />
 
-    <div id="fuse-box" class="dropzone-fuse">
+      <div id="studio-darkness"></div>
+
+      <div id="fuse-box" class="dropzone-fuse">
         <div id="slot-1" class="slot-light" onclick="Logic.removeFuse(1)"></div>
         <div id="slot-2" class="slot-light" onclick="Logic.removeFuse(2)"></div>
         <div id="slot-3" class="slot-light" onclick="Logic.removeFuse(3)"></div>
-    </div>
+      </div>
 
-    <div id="fuse-1" class="draggable-fuse">⚡</div>
-    <div id="fuse-2" class="draggable-fuse">⚡</div>
-    <div id="fuse-3" class="draggable-fuse">⚡</div>
+      <div id="fuse-1" class="draggable-fuse">⚡</div>
+      <div id="fuse-2" class="draggable-fuse">⚡</div>
+      <div id="fuse-3" class="draggable-fuse">⚡</div>
 
-    <div id="boot-overlay" class="hidden">
-    <img src="assets/img/screen_boot.png" alt="Booting System...">
-    <div class="loading-bar"></div> </div>
-   
-        
-        <div id="drop-drums" class="dropzone" data-accept="drag-drums">Batterie</div>
-        <div id="drop-bass" class="dropzone" data-accept="drag-bass">Basse</div>
-        <div id="drop-melody" class="dropzone" data-accept="drag-melody">Mélodie</div>
+      <div id="boot-overlay" class="hidden">
+        <img src="assets/img/screen_boot.png" alt="Booting System..." />
+        <div class="loading-bar"></div>
+      </div>
 
-        <div id="tracks-rack">
-            <div id="drag-drums" class="draggable-item track-drums"> Batterie</div>
-            <div id="drag-bass" class="draggable-item track-bass"> Basse</div>
-            <div id="drag-melody" class="draggable-item track-melody"> Mélodie</div>
+      <div id="drop-drums" class="dropzone" data-accept="drag-drums">
+        Batterie
+      </div>
+      <div id="drop-bass" class="dropzone" data-accept="drag-bass">Basse</div>
+      <div id="drop-melody" class="dropzone" data-accept="drag-melody">
+        Mélodie
+      </div>
+
+      <div id="tracks-rack">
+        <div id="drag-drums" class="draggable-item track-drums">Batterie</div>
+        <div id="drag-bass" class="draggable-item track-bass">Basse</div>
+        <div id="drag-melody" class="draggable-item track-melody">Mélodie</div>
+      </div>
+
+      <div id="locked-overlay" class="hidden">
+        <div class="screen-container">
+          <img
+            src="assets/img/screen_locked.png"
+            alt="Locked Screen"
+            v-if="sreencache"
+          />
+
+          <input
+            type="text"
+            id="pc-password"
+            autocomplete="off"
+            placeholder="..."
+          />
+
+          <button id="btn-unlock" onclick="Logic.checkPassword()">OK</button>
+
+          <button class="close-btn-modal" onclick="Logic.closeLockedScreen()">
+            X
+          </button>
         </div>
+      </div>
 
-        <div id="locked-overlay" class="hidden">
-            <div class="screen-container">
-                <img src="assets/img/screen_locked.png" alt="Locked Screen" v-if="sreencache">
-                
-                <input type="text" id="pc-password" autocomplete="off" placeholder="...">
-                
-                <button id="btn-unlock" onclick="Logic.checkPassword()">OK</button>
-                
-                <button class="close-btn-modal" onclick="Logic.closeLockedScreen()">X</button>
-            </div>
-        </div>
+      <div
+        id="daw-screen"
+        class="hitbox"
+        onclick="Logic.openLockedScreen()"
+      ></div>
+    </section>
 
-        <div id="daw-screen" class="hitbox" onclick="Logic.openLockedScreen()">
-        </div>
-</section>
-
-    <script src="js/main.js"></script>
-    <script src="js/puzzles.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/hints.js"></script>
+    <script src="js/ruelle_logic.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/puzzles.js"></script>
     <script src="js/drag_logic.js"></script>
   </body>
 </html>

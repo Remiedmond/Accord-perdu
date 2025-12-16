@@ -95,52 +95,6 @@ const HintSystem = {
     }
   },
 
-  // Générer des pièces dans les scènes
-  generateCoins: function () {
-    const scenes = document.querySelectorAll(".scene");
-
-    scenes.forEach((scene) => {
-      const coinsCount = 2 + Math.floor(Math.random() * 2); // 2-3 pièces
-
-      for (let i = 0; i < coinsCount; i++) {
-        this.createCoin(scene);
-      }
-    });
-  },
-
-  createCoin: function (scene) {
-    const coin = document.createElement("div");
-    coin.className = "coin-collectible";
-    coin.innerHTML = "🪙";
-    coin.style.left = 20 + Math.random() * 60 + "%";
-    coin.style.top = 20 + Math.random() * 60 + "%";
-
-    coin.addEventListener("click", () => {
-      this.collectCoin(coin);
-    });
-
-    scene.appendChild(coin);
-    this.coinZones.push(coin);
-  },
-
-  collectCoin: function (coinElement) {
-    if (window.anime) {
-      anime({
-        targets: coinElement,
-        translateY: -50,
-        opacity: 0,
-        scale: 2,
-        duration: 500,
-        easing: "easeOutQuad",
-        complete: () => coinElement.remove(),
-      });
-    } else {
-      coinElement.remove();
-    }
-
-    this.addCoins(1);
-  },
-
   // ============ GESTION DES OBJECTIFS ============
   completeObjective: function (objectiveId) {
     if (this.objectives[objectiveId]) {
