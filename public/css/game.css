@@ -3,15 +3,14 @@
 /* La zone du PAPIER (Indice) */
 #item-flyer {
     position: absolute;
-    bottom: 4%;       /* Ajuste ce chiffre pour monter/descendre */
-    left: 32%;         /* Ajuste ce chiffre pour aller gauche/droite */
-    width: 170px;       /* Largeur de la zone */
-    height: 70px;      /* Hauteur de la zone */
+    bottom: 4%;       
+    left: 32%;         
+    width: 170px;      
+    height: 70px;      
     cursor: pointer;
     z-index: 10;
 }
 
-/* La zone de la PORTE (Digicode) */
 #door-zone {
     position: absolute;
     top: 26%;
@@ -228,4 +227,78 @@
     background-color: #0f0;
     box-shadow: 0 0 10px #0f0;
     transition: width 3s linear; /* Animation CSS simple */
+}
+
+
+/* Fond noir derrière l'écran zoomé */
+#locked-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 300;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.screen-container {
+    position: relative; /* Important pour positionner l'input dedans */
+    width: 800px; /* Taille de l'image zoomée */
+    max-width: 90%;
+}
+
+.screen-container img {
+    width: 100%;
+    display: block;
+    border: 4px solid #333;
+    border-radius: 10px;
+}
+
+/* LE CHAMP DE MOT DE PASSE */
+#pc-password {
+    position: absolute;
+    /* --- RÉGLAGES À AJUSTER SELON TON IMAGE --- */
+    top: 55%;       /* Descend le champ */
+    left: 35%;      /* Décale vers la droite */
+    width: 30%;     /* Largeur du champ */
+    height: 40px;
+    /* ------------------------------------------ */
+    
+    background: transparent; /* Fond transparent */
+    border: none;
+    color: #0f0; /* Texte vert hacker */
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    text-align: center;
+    outline: none; /* Pas de bordure bleue quand on clique */
+    text-transform: uppercase;
+}
+
+/* Le bouton OK (optionnel, peut être placé sur un bouton dessiné) */
+#btn-unlock {
+    position: absolute;
+    top: 55%;
+    left: 66%;
+    height: 40px;
+    background: rgba(0, 255, 0, 0.2);
+    border: 1px solid #0f0;
+    color: #0f0;
+    cursor: pointer;
+}
+
+/* Bouton Quitter */
+.close-btn-screen {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 40px; height: 40px;
+    background: red; color: white;
+    border: 2px solid white; border-radius: 50%;
+    cursor: pointer;
+}
+#daw-screen {
+    position: absolute;
+    top: 0%;       
+    left: 52%;   
+    width: 520px;  
+    height: 360px; 
+    cursor: pointer;       
+    z-index: 100;          
 }

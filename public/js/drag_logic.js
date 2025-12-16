@@ -122,94 +122,239 @@ function checkVictory() {
 
 
 /* --- LOGIQUE FUSIBLES (STUDIO) --- */
+/* Fichier: js/drag_logic.js */
 
-let fusesFixed = 0; // Compteur
+const Logic = {
+    fusesFixed: 0,
+    bootTimeout: null, // Variable pour stocker le timer (et pouvoir l'annuler)
+    isSystemReady: false, // Devient TRUE quand le boot est fini
+    isUnlocked: false,    // Devient TRUE quand le mot de passe est bon
+    pcPassword: "EVAN",
 
-// 1. Rendre les fusibles bougeables
-interact('.draggable-fuse').draggable({
-    inertia: true,
-    modifiers: [ interact.modifiers.restrictRect({ restriction: '#scene-studio' }) ],
-    autoScroll: true,
-    listeners: { move: dragMoveListener }
-});
+    init: function() {
+        // 1. Rendre les fusibles bougeables
+        interact('.draggable-fuse').draggable({
+            inertia: true,
+            modifiers: [ interact.modifiers.restrictRect({ restriction: '#scene-studio' }) ],
+            autoScroll: true,
+            listeners: { move: dragMoveListener }
+        });
 
-// 2. Zone de dépôt (Le compteur)
-interact('.dropzone-fuse').dropzone({
-    accept: '.draggable-fuse',
-    overlap: 0.50,
-    
-    ondrop: function (event) {
-        // On cache le fusible qu'on vient de lâcher
-        event.relatedTarget.style.display = 'none';
+        // 2. Zone de dépôt (Le compteur)
+        interact('.dropzone-fuse').dropzone({
+            accept: '.draggable-fuse',
+            overlap: 0.50,
+            ondrop: function (event) {
+                // On appelle la fonction de placement
+                Logic.placeFuse(event.relatedTarget);
+            }
+        });
+    },
+
+    // --- QUAND ON POSE UN FUSIBLE ---
+    placeFuse: function(fuseElement) {
+        // Trouver le premier slot vide (qui n'est pas vert)
+        const slots = [
+            document.getElementById('slot-1'), 
+            document.getElementById('slot-2'), 
+            document.getElementById('slot-3')
+        ];
         
-        // On allume une petite lumière sur le compteur (feedback)
-        const slots = document.querySelectorAll('.slot-light');
-        if(slots[fusesFixed]) slots[fusesFixed].style.background = "#0f0"; // Vert
-        
-        fusesFixed++;
-
-        // Si on a les 3
-        if (fusesFixed === 3) {
-            turnPowerOn();
+        let emptyIndex = -1;
+        // On cherche une case qui n'a PAS la classe "active"
+        for(let i=0; i<3; i++) {
+            if (!slots[i].classList.contains('active')) {
+                emptyIndex = i;
+                break;
+            }
         }
-    }
-});
 
-function turnPowerOn() {
-    // 1. Son d'électricité (si tu as)
-    // new Audio('asset/audio/startup.mp3').play();
+        // Si on a trouvé une place
+        if (emptyIndex !== -1) {
+            // Cacher le fusible
+            fuseElement.style.display = 'none';
+            // On note dans le fusible où il est rangé (1, 2 ou 3)
+            fuseElement.setAttribute('data-slot', emptyIndex + 1);
 
-    // 2. On enlève le noir (Lumière revient)
-    anime({
-        targets: '#studio-darkness',
-        opacity: 0,
-        duration: 1500,
-        easing: 'linear',
-        complete: () => {
-            document.getElementById('studio-darkness').style.display = 'none';
+            // Allumer le slot
+            slots[emptyIndex].classList.add('active'); // Marque comme occupé
+            slots[emptyIndex].style.background = "#0f0"; // Vert
+
+            this.fusesFixed++;
+
+            // Si on a les 3 -> On allume !
+            if (this.fusesFixed === 3) {
+                this.turnPowerOn();
+            }
+        }
+    },
+
+    // --- QUAND ON ENLÈVE UN FUSIBLE (CLICK) ---
+    removeFuse: function(slotNum) {
+        const slot = document.getElementById('slot-' + slotNum);
+        
+        // Si le slot est déjà éteint, on ne fait rien
+        if (!slot.classList.contains('active')) return;
+
+        // 1. On éteint le slot
+        slot.classList.remove('active');
+        slot.style.background = "#000"; // Retour au noir
+
+        // 2. On retrouve le fusible qui était caché pour le réafficher
+        const fuse = document.querySelector(`.draggable-fuse[data-slot="${slotNum}"]`);
+        if (fuse) {
+            fuse.style.display = 'flex';
+            fuse.style.transform = 'translate(0px, 0px)';
+            fuse.setAttribute('data-x', 0);
+            fuse.setAttribute('data-y', 0);
+            fuse.style.top = "60%"; // Par terre
+            fuse.style.left = (20 + slotNum * 10) + "%"; // Un peu décalé
+        }
+
+        this.fusesFixed--;
+
+        // 3. COUPURE DE COURANT !
+        this.turnPowerOff();
+    },
+
+    // --- ALLUMAGE (Ton code adapté) ---
+    turnPowerOn: function() {
+        // Animation de la lumière
+        anime({
+            targets: '#studio-darkness',
+            opacity: 0,
+            duration: 1500,
+            easing: 'linear',
+            complete: () => {
+                document.getElementById('studio-darkness').style.display = 'none';
+            }
+        });
+
+        // Lancer le démarrage
+        this.startComputerBoot();
+    },
+
+    // --- EXTINCTION (Nouveau) ---
+    turnPowerOff: function() {
+        console.log("Coupure de courant !");
+
+        // 1. Arrêter le chargement en cours 
+        if (this.bootTimeout) {
+            clearTimeout(this.bootTimeout);
+            this.bootTimeout = null;
+        }
+
+        // 2. Remettre le noir
+        const darkness = document.getElementById('studio-darkness');
+        darkness.style.display = 'block';
+        anime({
+            targets: '#studio-darkness',
+            opacity: 1,
+            duration: 200, 
+            easing: 'linear'
+        });
+
+        // 3. Cacher les écrans
+        document.getElementById('boot-overlay').classList.add('hidden');
+        document.getElementById('tracks-rack').classList.add('hidden');
+    
+        document.querySelector('.loading-bar').style.width = "0%";
+    },
+
+    startComputerBoot: function() {
+        const bootScreen = document.getElementById('boot-overlay');
+        const loadingBar = document.querySelector('.loading-bar');
+
+        bootScreen.classList.remove('hidden');
+        setTimeout(() => { loadingBar.style.width = "100%"; }, 50);
+
+            this.bootTimeout = setTimeout(() => {
+            bootScreen.classList.add('hidden');
+            this.isSystemReady = true; 
             
-            // 3. LANCEMENT DU DÉMARRAGE ORDI
-            startComputerBoot();
-        }
-    });
-}
+            document.getElementById('daw-screen').style.cursor = "pointer";
+            
+        }, 3500); // 3.5 secondes d'attente
+    },
+        // --- 1. OUVRIR L'ÉCRAN VERROUILLÉ ---
+   
 
-function startComputerBoot() {
-    const bootScreen = document.getElementById('boot-overlay');
-    const loadingBar = document.querySelector('.loading-bar');
-
-    // Affiche l'écran de boot
-    bootScreen.classList.remove('hidden');
-
-    // Lance l'animation de la barre de chargement (CSS width)
-    // Petit délai pour que le navigateur prenne en compte l'affichage
-    setTimeout(() => {
-        loadingBar.style.width = "100%";
-    }, 100);
-
-    // 4. Une fois le chargement fini (3 secondes plus tard)
-    setTimeout(() => {
-        // On cache l'écran de boot
-        bootScreen.classList.add('hidden');
+// --- 1. OUVRIR L'ÉCRAN VERROUILLÉ ---
+    openLockedScreen: function() {
         
-        // On affiche ENFIN le rack de musique et l'écran interactif
-        showMusicInterface();
+        if (this.isSystemReady && this.fusesFixed === 3 && !this.isUnlocked) {
+            
+            document.getElementById('locked-overlay').classList.remove('hidden');
+            this.sreencache = true;
+            
+            // Focus sur le champ de mot de passe
+            const passwordField = document.getElementById('pc-password');
+            if(passwordField) {
+                passwordField.value = "";
+                passwordField.focus();
+            }
+        } 
+        else if (this.fusesFixed < 3) {
+          this.sreencache = false;
+        }
+    },
 
-    }, 3500); // 3.5 secondes d'attente
+    closeLockedScreen: function() {
+        document.getElementById('locked-overlay').classList.add('hidden');
+    },
+
+    // --- 3. VÉRIFIER LE MOT DE PASSE ---
+    checkPassword: function() {
+        const input = document.getElementById('pc-password');
+        
+        if (input.value.toUpperCase() === this.pcPassword) {
+            // SUCCÈS
+            this.isUnlocked = true;
+            this.closeLockedScreen();
+            
+            // On lance l'interface de musique
+            this.showMusicInterface();
+            
+        } else {
+            // ERREUR
+            // Animation de secousse sur le conteneur
+            anime({
+                targets: '.screen-container',
+                translateX: [ -10, 10, -10, 10, 0 ],
+                duration: 400
+            });
+            input.value = ""; 
+            input.placeholder = "ERREUR";
+        }
+    },
+
+    showMusicInterface: function() {
+        const rack = document.getElementById('tracks-rack');
+        rack.classList.remove('hidden');
+        
+        anime({
+            targets: '#tracks-rack',
+            translateY: [100, 0], 
+            opacity: [0, 1],
+            duration: 800,
+            easing: 'easeOutExpo'
+        });
+    }
+};
+
+// On lance l'initialisation
+Logic.init();
+
+// Fonction helper standard Interact.js
+function dragMoveListener (event) {
+    var target = event.target;
+    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
 }
 
-function showMusicInterface() {
-    const rack = document.getElementById('tracks-rack');
-    rack.classList.remove('hidden');
-    
-    // Animation d'entrée du rack (il monte du bas)
-    anime({
-        targets: '#tracks-rack',
-        translateY: [100, 0], 
-        opacity: [0, 1],
-        duration: 800,
-        easing: 'easeOutExpo'
-    });
 
-    alert("Système opérationnel. Placez les pistes pour lancer le mix !");
-}
+
+

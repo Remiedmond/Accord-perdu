@@ -14,7 +14,7 @@
   <body>
     <div id="modal-overlay" class="hidden" onclick="Game.closeModal()">
       <div class="modal-content" onclick="event.stopPropagation()">
-        <button class="close-btn-modal" onclick="Game.closeModal()">X</button>
+        <button class="close-btn" onclick="Game.closeModal()">X</button>
 
         <img id="modal-img" src="" alt="info" />
 
@@ -27,7 +27,21 @@
       <div id="inventory"></div>
     </div>
 
-    <section id="scene-ruelle" class="scene active">
+    <section id="scene-accueil" class="scene active">
+      <div class="video-container">
+        <video
+          id="intro-video"
+          src="assets/video/accueil.mp4"
+          autoplay
+          muted
+          playsinline
+          onclick="Game.startGame()"
+          onended="Game.startGame()"
+        ></video>
+      </div>
+    </section>
+
+    <section id="scene-ruelle" class="scene hidden">
       <img src="assets/img/bg_ruelle.png" class="bg-img" alt="Ruelle" />
 
       <!-- à enlever quand Décor fait -->
@@ -111,9 +125,9 @@
       <div id="studio-darkness"></div>
 
       <div id="fuse-box" class="dropzone-fuse">
-        <div class="slot-light"></div>
-        <div class="slot-light"></div>
-        <div class="slot-light"></div>
+        <div id="slot-1" class="slot-light" onclick="Logic.removeFuse(1)"></div>
+        <div id="slot-2" class="slot-light" onclick="Logic.removeFuse(2)"></div>
+        <div id="slot-3" class="slot-light" onclick="Logic.removeFuse(3)"></div>
       </div>
 
       <div id="fuse-1" class="draggable-fuse">⚡</div>
@@ -138,6 +152,35 @@
         <div id="drag-bass" class="draggable-item track-bass">Basse</div>
         <div id="drag-melody" class="draggable-item track-melody">Mélodie</div>
       </div>
+
+      <div id="locked-overlay" class="hidden">
+        <div class="screen-container">
+          <img
+            src="assets/img/screen_locked.png"
+            alt="Locked Screen"
+            v-if="sreencache"
+          />
+
+          <input
+            type="text"
+            id="pc-password"
+            autocomplete="off"
+            placeholder="..."
+          />
+
+          <button id="btn-unlock" onclick="Logic.checkPassword()">OK</button>
+
+          <button class="close-btn-modal" onclick="Logic.closeLockedScreen()">
+            X
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="daw-screen"
+        class="hitbox"
+        onclick="Logic.openLockedScreen()"
+      ></div>
     </section>
 
     <script src="js/timer.js"></script>
