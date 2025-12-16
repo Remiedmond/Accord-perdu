@@ -95,6 +95,7 @@ const RuelleGame = {
     if (window.anime) {
       anime({
         targets: container,
+        translateX: "-50%",
         translateY: [-20, 0],
         opacity: [0, 1],
         duration: 400,

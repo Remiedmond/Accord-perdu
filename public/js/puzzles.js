@@ -43,10 +43,8 @@ const Puzzles = {
     const modalImg = document.getElementById("modal-img");
 
     if (this.codeSaisi === this.codeSecret) {
-      // --- CAS 1 : SUCCÈS ---
-
-      // 1. On prépare la modale "Succès"
-      modalImg.style.display = "none"; // On cache l'image (pas besoin d'image ici)
+      
+      modalImg.style.display = "none"; 
       modalDesc.innerHTML =
         "<h2 style='color:#0f0'>ACCÈS AUTORISÉ</h2><p>Bienvenue au Studio.</p>";
 
