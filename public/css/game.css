@@ -3,8 +3,8 @@
 /* La zone du PAPIER (Indice) */
 #item-flyer {
   position: absolute;
-  bottom: 4%;
-  left: 32%;
+  bottom: 2%;
+  left: 30%;
   width: 170px;
   height: 70px;
   cursor: pointer;

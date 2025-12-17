@@ -15,14 +15,6 @@
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
 }
 
-/* ========== LETTRE B - POTEAU ========== */
-#poteau-lettre-b {
-  left: 21.5%;
-  top: 32%;
-  width: 60px;
-  height: 60px;
-}
-
 .zone-lettre {
   background: rgba(231, 76, 60, 0.3);
   border: 2px dashed #e74c3c;
@@ -52,22 +44,26 @@
 
 /* ========== GANTS ========== */
 #gants-item {
-  left: 15%;
-  bottom: 28%;
+  left: 3%;
+  bottom: 18%;
   width: 70px;
   height: 50px;
 }
 
+#gants-item img {
+  width: 200%;
+  height: 200%;
+}
+
 .gants-draggable {
-  background: rgba(0, 0, 0, 0.3);
-  border: 2px solid #fff;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 40px;
   cursor: grab;
   touch-action: none;
+  z-index: 500;
+  position: relative;
 }
 
 .gants-draggable:active {
@@ -83,19 +79,20 @@
   justify-content: center;
   border-radius: 10px;
   transition: all 0.3s;
+  z-index: 100;
 }
 
 /* ========== GOUTTIÈRE SECRÈTE ========== */
 #goutiere-secret {
-  right: 20%;
-  top: 60%;
+  right: 18%;
+  top: 62%;
   width: 20px;
   height: 20px;
 }
 
 /* ========== TAG MUR ========== */
 #tag-mur {
-  left: 25%;
+  left: 22%;
   top: 15%;
   width: 100px;
   height: 120px;

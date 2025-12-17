@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/post-it.css" />
     <link rel="stylesheet" href="css/interference.css" />
     <link rel="stylesheet" href="css/mixage.css" />
+    <link rel="stylesheet" href="css/studio.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
@@ -47,30 +48,26 @@
     <section id="scene-ruelle" class="scene hidden">
       <img src="assets/img/bg_ruelle.png" class="bg-img" alt="Ruelle" />
 
-      <!-- à enlever quand Décor fait -->
-      <!-- Lettre B - Poteau -->
-      <div id="poteau-lettre-b" class="zone-interactive zone-lettre">
-        <span class="lettre-hint">B</span>
-      </div>
-
       <!-- Flyer -->
       <div id="item-flyer" class="zone-interactive"></div>
 
       <!-- Gants -->
-      <div id="gants-item" class="gants-draggable zone-interactive">🧤</div>
+      <div id="gants-item" class="gants-draggable zone-interactive">
+        <img src="assets/img/gants.png" alt="Gants" />
+      </div>
 
       <!-- Poubelle milieu - GARDE le style inline -->
       <div
         id="poubelle-milieu"
         class="poubelle dropzone"
-        style="left: 40%; bottom: 45%; width: 80px; height: 150px"
+        style="left: 37%; bottom: 45%; width: 80px; height: 150px"
       ></div>
 
       <!-- Poubelle droite - GARDE le style inline -->
       <div
         id="poubelle-droite"
         class="poubelle dropzone"
-        style="right: 7%; bottom: 55%; width: 130px; height: 80px"
+        style="right: 2%; bottom: 55%; width: 130px; height: 80px"
       ></div>
 
       <!-- Gouttière secrète -->
@@ -78,13 +75,7 @@
 
       <!-- à enlever quand Décor fait -->
       <!-- Tag mur -->
-      <div id="tag-mur" class="zone-interactive zone-tag">
-        <div class="tag-content">
-          <div style="color: #e74c3c; font-size: 20px">B=2</div>
-          <div style="color: #3498db; font-size: 20px">F=6</div>
-          <div style="color: #f39c12; font-size: 20px">L=12</div>
-        </div>
-      </div>
+      <div id="tag-mur" class="zone-interactive"></div>
 
       <!-- Porte -->
       <div
@@ -138,6 +129,10 @@
       <div id="boot-overlay" class="hidden">
         <img src="assets/img/screen_boot.png" alt="Booting System..." />
         <div class="loading-bar"></div>
+      </div>
+
+      <div id="note-mi-collectible" style="right: 15%; top: 40%; display: none">
+        ♪ MI
       </div>
 
       <!--<div id="tracks-rack">
@@ -376,5 +371,6 @@
     <script src="js/puzzles.js"></script>
     <script src="js/drag_logic.js"></script>
     <script src="js/phase_int.js"></script>
+    <script src="js/studio_logic.js"></script>
   </body>
 </html>

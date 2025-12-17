@@ -1,0 +1,72 @@
+/* ============ STUDIO CSS - SIMPLIFIÉ ============ */
+
+/* ========== NOTE MI COLLECTIBLE ========== */
+#note-mi-collectible {
+  position: absolute;
+  cursor: pointer;
+  z-index: 100;
+  display: none; /* Caché par défaut */
+  font-size: 48px;
+  background: rgba(52, 152, 219, 0.3);
+  border: 3px solid #3498db;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  animation: float-note 3s ease-in-out infinite;
+}
+
+#note-mi-collectible:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+}
+
+@keyframes float-note {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ========== AFFICHAGE DE LA NOTE MI ========== */
+.note-display {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  display: none; /* Caché par défaut */
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background: #3498db;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .note-display {
+    top: 80px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  #note-mi-collectible {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+}
