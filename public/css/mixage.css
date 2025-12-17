@@ -15,6 +15,7 @@
     display: flex; justify-content: center; align-items: center;
 }
 
+
 .fader-container {
     background: #222; border: 2px solid #555; padding: 30px;
     border-radius: 10px; width: 500px; text-align: center;

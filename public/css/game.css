@@ -168,7 +168,7 @@
   background: #f1c40f; /* Jaune */
   border: 2px solid white;
   position: absolute;
-  z-index: 60; /* Au-dessus du noir */
+  z-index: 6000; /* Au-dessus du noir */
   cursor: grab;
   display: flex;
   justify-content: center;
@@ -266,9 +266,8 @@
 }
 
 .screen-container {
-  position: relative; /* Important pour positionner l'input dedans */
-  width: 800px; /* Taille de l'image zoomée */
-  max-width: 90%;
+  position: relative;
+  width: 1000px;
 }
 
 .screen-container img {
@@ -332,3 +331,30 @@
   cursor: pointer;
   z-index: 100;
 }
+
+/************************************************* Style pour l'écran principal de l'ordinateur ***************************************/
+#pc-main-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Fond sombre autour */
+  z-index: 300; /* Au-dessus de la pièce (qui est ~0-100) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* On s'assure que le Rack de musique et les Dropzones sont ENCORE PLUS HAUT */
+/* Comme ça, on peut glisser les sons SUR l'écran */
+#tracks-rack {
+  z-index: 500 !important;
+}
+.dropzone {
+  z-index: 400 !important;
+}
+
+/* Ajustement facultatif : si vous voulez que les dropzones soient visibles 
+   uniquement quand on zoom, il faudra gérer ça en JS. 
+   Pour l'instant, on les laisse visibles. */
