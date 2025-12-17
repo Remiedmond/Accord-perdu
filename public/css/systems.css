@@ -7,7 +7,7 @@
 .timer-display {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 20px;
   font-size: 32px;
   font-weight: bold;
   color: #00ff00;
@@ -166,7 +166,7 @@
 /* Affichage des pièces */
 #coins-display {
   position: fixed;
-  top: 20px;
+  top: 80px;
   left: 20px;
   font-size: 24px;
   font-weight: bold;

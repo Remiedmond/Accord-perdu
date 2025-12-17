@@ -27,7 +27,6 @@ const RuelleGame = {
       if (el) el.onclick = fn;
     };
 
-    attach("poteau-lettre-b", () => this.examinerPoteau());
     attach("item-flyer", () => this.examinerFlyer());
     attach("goutiere-secret", () => this.secretGoutiere());
     attach("tag-mur", () => this.voirTag());
@@ -157,10 +156,10 @@ const RuelleGame = {
         const overlay = document.getElementById("modal-overlay");
 
         if (modalImg && modalDesc && overlay) {
-          modalImg.src = "assets/img/indice_flyer_zoom.png";
+          modalImg.src = "assets/img/papier_sol.png";
           modalImg.style.display = "block";
           modalDesc.innerHTML =
-            "Un flyer froissé trouvé par terre.<br>On peut y lire une date griffonnée : <strong style='color:yellow'>1204</strong>";
+            "Un flyer froissé par terre.<br> C'est pour un concours de musique, je dois créer une prod !<br> La lettre <strong>F</strong> est inscrite et séparée du texte, elle doit être importante.";
           overlay.classList.remove("hidden");
         }
 
@@ -213,9 +212,8 @@ const RuelleGame = {
   penserPoubelle: function () {
     const pensees = [
       "Une poubelle... C'est dégoûtant, je ne vais pas y toucher.",
-      "Beurk... Il me faudrait des gants pour fouiller là-dedans.",
       "Sans protection, pas question de mettre la main là-dedans !",
-      "Ça sent mauvais... Peut-être avec des gants ?",
+      "Ça sent mauvais...",
     ];
     const pensee = pensees[Math.floor(Math.random() * pensees.length)];
     this.showThought(pensee);
@@ -279,7 +277,7 @@ const RuelleGame = {
 
   voirTag: function () {
     this.showThought(
-      "Ce ne sont pas les chiffres qui comptent mais leur rang.. Hmm.."
+      "Ce ne sont pas les lettres qui comptent mais leur rang.. Hmm.."
     );
 
     setTimeout(() => {
