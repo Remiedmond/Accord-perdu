@@ -2,7 +2,7 @@
 
 const Puzzles = {
   codeSaisi: "",
-  codeSecret: "1204",
+  codeSecret: "2612",
 
   // Ouvre le digicode
   openDigicode: function () {
@@ -43,8 +43,7 @@ const Puzzles = {
     const modalImg = document.getElementById("modal-img");
 
     if (this.codeSaisi === this.codeSecret) {
-      
-      modalImg.style.display = "none"; 
+      modalImg.style.display = "none";
       modalDesc.innerHTML =
         "<h2 style='color:#0f0'>ACCÈS AUTORISÉ</h2><p>Bienvenue au Studio.</p>";
 

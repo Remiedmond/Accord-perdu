@@ -27,6 +27,7 @@ const RuelleGame = {
       if (el) el.onclick = fn;
     };
 
+    attach("poteau-lettre-b", () => this.examinerPoteau());
     attach("item-flyer", () => this.examinerFlyer());
     attach("goutiere-secret", () => this.secretGoutiere());
     attach("tag-mur", () => this.voirTag());
@@ -48,6 +49,9 @@ const RuelleGame = {
         }),
       ],
       listeners: {
+        start: (e) => {
+          e.target.style.zIndex = "1000";
+        },
         move: (e) => {
           const t = e.target,
             x = (parseFloat(t.getAttribute("data-x")) || 0) + e.dx,
@@ -55,6 +59,9 @@ const RuelleGame = {
           t.style.transform = `translate(${x}px, ${y}px)`;
           t.setAttribute("data-x", x);
           t.setAttribute("data-y", y);
+        },
+        end: (e) => {
+          e.target.style.zIndex = "500";
         },
       },
     });
@@ -95,7 +102,7 @@ const RuelleGame = {
     if (window.anime) {
       anime({
         targets: container,
-        translateX: "-50%",
+        translateX: "-50%", // Maintenir le centrage horizontal
         translateY: [-20, 0],
         opacity: [0, 1],
         duration: 400,
@@ -116,6 +123,7 @@ const RuelleGame = {
     if (window.anime) {
       anime({
         targets: container,
+        translateX: "-50%", // Maintenir le centrage horizontal
         opacity: [1, 0],
         duration: 300,
         easing: "easeInQuad",
@@ -129,8 +137,6 @@ const RuelleGame = {
       container.classList.add("thoughts-hidden");
     }
   },
-
-  // ========== INTERACTIONS ==========
 
   examinerFlyer: function () {
     const premiereFois = !this.lettresCollectees.F;
@@ -177,7 +183,10 @@ const RuelleGame = {
 
     this.poubelles.droite = true;
 
-    this.showThought("Il y a un tag dans cette poubelle.");
+    // Changer le fond pour montrer la poubelle ouverte
+    this.changerFondPoubelle();
+
+    this.showThought("Avec les gants, ça passe... J'ai trouvé un 'L' !");
 
     setTimeout(() => {
       this.checkRetirerGants(gants);
@@ -204,8 +213,9 @@ const RuelleGame = {
   penserPoubelle: function () {
     const pensees = [
       "Une poubelle... C'est dégoûtant, je ne vais pas y toucher.",
-      "Pas question de mettre la main là-dedans !",
-      "Ça sent mauvais...",
+      "Beurk... Il me faudrait des gants pour fouiller là-dedans.",
+      "Sans protection, pas question de mettre la main là-dedans !",
+      "Ça sent mauvais... Peut-être avec des gants ?",
     ];
     const pensee = pensees[Math.floor(Math.random() * pensees.length)];
     this.showThought(pensee);
@@ -227,6 +237,33 @@ const RuelleGame = {
     }
   },
 
+  changerFondPoubelle: function () {
+    // Changer l'image de fond pour montrer la poubelle ouverte
+    const bgImg = document.querySelector("#scene-ruelle .bg-img");
+    if (bgImg) {
+      // Animation de transition
+      if (window.anime) {
+        anime({
+          targets: bgImg,
+          opacity: [1, 0],
+          duration: 300,
+          easing: "easeInQuad",
+          complete: () => {
+            bgImg.src = "assets/img/bg_ruelle_1.png";
+            anime({
+              targets: bgImg,
+              opacity: [0, 1],
+              duration: 300,
+              easing: "easeOutQuad",
+            });
+          },
+        });
+      } else {
+        bgImg.src = "assets/img/bg_ruelle_poubelle_ouverte.png";
+      }
+    }
+  },
+
   secretGoutiere: function () {
     const g = document.getElementById("goutiere-secret");
     if (g && g.dataset.found !== "true") {
@@ -241,28 +278,14 @@ const RuelleGame = {
   },
 
   voirTag: function () {
-    this.showThought("Un tag étrange avec des lettres et des chiffres...");
+    this.showThought(
+      "Ce ne sont pas les chiffres qui comptent mais leur rang.. Hmm.."
+    );
 
     setTimeout(() => {
       const modalImg = document.getElementById("modal-img");
       const modalDesc = document.getElementById("modal-desc");
       const overlay = document.getElementById("modal-overlay");
-
-      if (modalImg && modalDesc && overlay) {
-        modalImg.style.display = "none";
-        modalDesc.innerHTML = `
-          <h3 style="color:#3498db;">🎨 Tag mystérieux</h3>
-          <div style="font-family:monospace; font-size:20px; text-align:center; background:rgba(0,0,0,0.3); padding:20px; border-radius:10px; margin:15px 0;">
-            <div style="color:#e74c3c;">B = 2</div>
-            <div style="color:#3498db;">F = 6</div>
-            <div style="color:#f39c12;">L = 12</div>
-          </div>
-          <p style="font-size:14px; opacity:0.8;">
-            Chaque lettre correspond à sa position dans l'alphabet...
-          </p>
-        `;
-        overlay.classList.remove("hidden");
-      }
     }, 500);
   },
 };

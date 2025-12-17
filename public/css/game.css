@@ -2,324 +2,357 @@
 
 /* La zone du PAPIER (Indice) */
 #item-flyer {
-    position: absolute;
-    bottom: 4%;       
-    left: 32%;         
-    width: 170px;      
-    height: 70px;      
-    cursor: pointer;
-    z-index: 10;
+  position: absolute;
+  bottom: 2%;
+  left: 30%;
+  width: 170px;
+  height: 70px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 #door-zone {
-    position: absolute;
-    top: 26%;
-    right: 26%;        /* Ajuste selon ton dessin */
-    width: 60px;
-    height: 90px;
-    cursor: pointer;
-    z-index: 10;
+  position: absolute;
+  top: 26%;
+  right: 26%; /* Ajuste selon ton dessin */
+  width: 60px;
+  height: 90px;
+  cursor: pointer;
+  z-index: 10;
 }
 
 /* css/game.css */
 
 /* L'écran noir qui recouvre tout le jeu */
 #overlay-digicode {
-    position: fixed;      /* Reste fixe par dessus tout */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6); 
-    z-index: 999;      
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed; /* Reste fixe par dessus tout */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* La boîte du clavier elle-même */
 .digicode-container {
-    background-color: #333;
-    padding: 20px;
-    border: 4px solid #fff;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    font-family: monospace;
+  background-color: #333;
+  padding: 20px;
+  border: 4px solid #fff;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  font-family: monospace;
 }
 
 .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    max-width: 200px;
-    margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 200px;
+  margin: 20px auto;
 }
 
 /* Les boutons */
 .keypad button {
-    width: 60px;
-    height: 60px;
-    font-size: 20px;
-    cursor: pointer;
-    background: #000;
-    color: #0f0; 
-    border: 1px solid #0f0;
+  width: 60px;
+  height: 60px;
+  font-size: 20px;
+  cursor: pointer;
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
 }
 .hidden {
-    display: none !important;
+  display: none !important;
 }
-
 
 /* L'arrière-plan sombre qui floute le jeu */
 #modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85); /* Très sombre */
-    z-index: 10000; /* Tout en haut */
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(5px); /* Floute le décor derrière (effet moderne) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85); /* Très sombre */
+  z-index: 10000; /* Tout en haut */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px); /* Floute le décor derrière (effet moderne) */
 }
 
 /* La boîte de l'indice */
 .modal-content {
-    background: #1a1a1a;
-    border: 4px solid #fff;
-    padding: 20px;
-    max-width: 90%; /* Pour mobile */
-    max-height: 90%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+  background: #1a1a1a;
+  border: 4px solid #fff;
+  padding: 20px;
+  max-width: 90%; /* Pour mobile */
+  max-height: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
 }
 
 /* L'image dans la modale */
 #modal-img {
-    max-width: 400px; /* Taille max de l'image */
-    width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto 15px auto;
-    border: 2px solid #555;
-    image-rendering: pixelated; /* Garde le style pixel art */
+  max-width: 400px; /* Taille max de l'image */
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px auto;
+  border: 2px solid #555;
+  image-rendering: pixelated; /* Garde le style pixel art */
 }
 
 /* Le texte */
 #modal-desc {
-    color: #fff;
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    line-height: 1.5;
+  color: #fff;
+  font-family: "Courier New", monospace;
+  font-size: 1.2rem;
+  line-height: 1.5;
 }
 
 /* Le bouton fermer */
 
 .close-btn {
-    background: red;
-    color: white;
-    border: 2px solid white;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: bold;
+  background: red;
+  color: white;
+  border: 2px solid white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
 }
 .close-btn-modal {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    background: red;
-    color: white;
-    border: 2px solid white;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: bold;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: red;
+  color: white;
+  border: 2px solid white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .close-btn-modal:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 /* --- LE BLACKOUT DU STUDIO --- */
 #studio-darkness {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.92); /* Presque noir complet */
-    pointer-events: none; /* Permet de cliquer à travers */
-    z-index: 50;
-    transition: opacity 2s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.92); /* Presque noir complet */
+  pointer-events: none; /* Permet de cliquer à travers */
+  z-index: 50;
+  transition: opacity 2s ease;
 }
 
 /* --- LES FUSIBLES --- */
 .draggable-fuse {
-    width: 25px; height: 40px;
-    background: #f1c40f; /* Jaune */
-    border: 2px solid white;
-    position: absolute;
-    z-index: 6000; /* Au-dessus du noir */
-    cursor: grab;
-    display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 0 15px #f1c40f; /* Lueur pour les voir dans le noir */
-    animation: glow 2s infinite alternate;
+  width: 25px;
+  height: 40px;
+  background: #f1c40f; /* Jaune */
+  border: 2px solid white;
+  position: absolute;
+  z-index: 6000; /* Au-dessus du noir */
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 15px #f1c40f; /* Lueur pour les voir dans le noir */
+  animation: glow 2s infinite alternate;
 }
 
 @keyframes glow {
-    from { box-shadow: 0 0 5px #f1c40f; }
-    to { box-shadow: 0 0 20px #f1c40f; }
+  from {
+    box-shadow: 0 0 5px #f1c40f;
+  }
+  to {
+    box-shadow: 0 0 20px #f1c40f;
+  }
 }
 
 /* Positions des cachettes (Ajuste selon ton image bg_studio !) */
-#fuse-1 { bottom: 10%; left: 20%; }  /* Sous la table */
-#fuse-2 { top: 30%; right: 10%; }    /* Sur une enceinte */
-#fuse-3 { top: 10%; left: 40%; }     /* Sur une étagère */
+#fuse-1 {
+  bottom: 10%;
+  left: 20%;
+} /* Sous la table */
+#fuse-2 {
+  top: 30%;
+  right: 10%;
+} /* Sur une enceinte */
+#fuse-3 {
+  top: 10%;
+  left: 40%;
+} /* Sur une étagère */
 
 /* --- LE COMPTEUR AU MUR --- */
 #fuse-box {
-    position: absolute;
-    top: 20%; left: 5%; /* Sur le mur de gauche */
-    width: 80px; height: 100px;
-    background: #333;
-    border: 2px solid #666;
-    z-index: 60; /* Visible dans le noir */
-    display: flex; flex-direction: column; 
-    justify-content: space-around; align-items: center;
+  position: absolute;
+  top: 20%;
+  left: 5%; /* Sur le mur de gauche */
+  width: 80px;
+  height: 100px;
+  background: #333;
+  border: 2px solid #666;
+  z-index: 60; /* Visible dans le noir */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .slot-light {
-    width: 60%; height: 10px;
-    background: #000;
-    border-radius: 2px;
+  width: 60%;
+  height: 10px;
+  background: #000;
+  border-radius: 2px;
 }
-
 
 /* L'Écran de démarrage (Centré) */
 #boot-overlay {
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    min-width: 100%; /* Taille de l'image */
-    height: 100%;
-    z-index: 200; /* Au-dessus de tout */
-    border: 5px solid #222;
-    box-shadow: 0 0 50px rgba(0, 255, 0, 0.2);
-    background: black;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  min-width: 100%; /* Taille de l'image */
+  height: 100%;
+  z-index: 200; /* Au-dessus de tout */
+  border: 5px solid #222;
+  box-shadow: 0 0 50px rgba(0, 255, 0, 0.2);
+  background: black;
 }
 
 #boot-overlay img {
-    width: 100%;
-    height: 90%;
-    display: block;
+  width: 100%;
+  height: 90%;
+  display: block;
 }
 
 /* Petite barre de chargement verte en bas */
 .loading-bar {
-    width: 0%;
-    height: 10px;
-    background-color: #0f0;
-    box-shadow: 0 0 10px #0f0;
-    transition: width 3s linear; /* Animation CSS simple */
+  width: 0%;
+  height: 10px;
+  background-color: #0f0;
+  box-shadow: 0 0 10px #0f0;
+  transition: width 3s linear; /* Animation CSS simple */
 }
-
 
 /* Fond noir derrière l'écran zoomé */
 #locked-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 300;
-    display: flex; justify-content: center; align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .screen-container {
-    position: relative;
-    width: 1000px; 
+  position: relative;
+  width: 1000px;
 }
 
 .screen-container img {
-    width: 100%;
-    display: block;
-    border: 4px solid #333;
-    border-radius: 10px;
+  width: 100%;
+  display: block;
+  border: 4px solid #333;
+  border-radius: 10px;
 }
 
 /* LE CHAMP DE MOT DE PASSE */
 #pc-password {
-    position: absolute;
-    /* --- RÉGLAGES À AJUSTER SELON TON IMAGE --- */
-    top: 55%;       /* Descend le champ */
-    left: 35%;      /* Décale vers la droite */
-    width: 30%;     /* Largeur du champ */
-    height: 40px;
-    /* ------------------------------------------ */
-    
-    background: transparent; /* Fond transparent */
-    border: none;
-    color: #0f0; /* Texte vert hacker */
-    font-family: 'Courier New', monospace;
-    font-size: 24px;
-    text-align: center;
-    outline: none; /* Pas de bordure bleue quand on clique */
-    text-transform: uppercase;
+  position: absolute;
+  /* --- RÉGLAGES À AJUSTER SELON TON IMAGE --- */
+  top: 55%; /* Descend le champ */
+  left: 35%; /* Décale vers la droite */
+  width: 30%; /* Largeur du champ */
+  height: 40px;
+  /* ------------------------------------------ */
+
+  background: transparent; /* Fond transparent */
+  border: none;
+  color: #0f0; /* Texte vert hacker */
+  font-family: "Courier New", monospace;
+  font-size: 24px;
+  text-align: center;
+  outline: none; /* Pas de bordure bleue quand on clique */
+  text-transform: uppercase;
 }
 
 /* Le bouton OK (optionnel, peut être placé sur un bouton dessiné) */
 #btn-unlock {
-    position: absolute;
-    top: 55%;
-    left: 66%;
-    height: 40px;
-    background: rgba(0, 255, 0, 0.2);
-    border: 1px solid #0f0;
-    color: #0f0;
-    cursor: pointer;
+  position: absolute;
+  top: 55%;
+  left: 66%;
+  height: 40px;
+  background: rgba(0, 255, 0, 0.2);
+  border: 1px solid #0f0;
+  color: #0f0;
+  cursor: pointer;
 }
 
 /* Bouton Quitter */
 .close-btn-screen {
-    position: absolute;
-    top: -20px; right: -20px;
-    width: 40px; height: 40px;
-    background: red; color: white;
-    border: 2px solid white; border-radius: 50%;
-    cursor: pointer;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 40px;
+  height: 40px;
+  background: red;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
 }
 #daw-screen {
-    position: absolute;
-    top: 0%;       
-    left: 52%;   
-    width: 520px;  
-    height: 360px; 
-    cursor: pointer;       
-    z-index: 100;          
+  position: absolute;
+  top: 0%;
+  left: 52%;
+  width: 520px;
+  height: 360px;
+  cursor: pointer;
+  z-index: 100;
 }
-
-
 
 /************************************************* Style pour l'écran principal de l'ordinateur ***************************************/
 #pc-main-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85); /* Fond sombre autour */
-    z-index: 300; /* Au-dessus de la pièce (qui est ~0-100) */
-    display: flex; justify-content: center; align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85); /* Fond sombre autour */
+  z-index: 300; /* Au-dessus de la pièce (qui est ~0-100) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* On s'assure que le Rack de musique et les Dropzones sont ENCORE PLUS HAUT */
 /* Comme ça, on peut glisser les sons SUR l'écran */
 #tracks-rack {
-    z-index: 500 !important; 
+  z-index: 500 !important;
 }
 .dropzone {
-    z-index: 400 !important;
+  z-index: 400 !important;
 }
 
 /* Ajustement facultatif : si vous voulez que les dropzones soient visibles 
