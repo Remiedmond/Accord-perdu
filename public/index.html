@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/interference.css" />
     <link rel="stylesheet" href="css/mixage.css" />
     <link rel="stylesheet" href="css/studio.css" />
+    <link rel="stylesheet" href="css/simon.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
@@ -200,99 +201,42 @@ function startVideoWithSound() {
         </div>
       </div>
 
-      <div
-        id="daw-screen"
-        class="hitbox"
-        onclick="Logic.openLockedScreen()"
-      ></div>
-
-      <div
-        id="postit-trigger"
-        class="postit-room"
-        onclick="Logic.openPostIt('overlay-postit-1')"
-      ></div>
-      <div
-        id="postit-trigger2"
-        class="postit-room"
-        onclick="Logic.openPostIt('overlay-postit-2')"
-      ></div>
-      <div
-        id="postit-trigger3"
-        class="postit-room"
-        onclick="Logic.openPostIt('overlay-postit-3')"
-      ></div>
-      <div
-        id="postit-trigger4"
-        class="postit-room"
-        onclick="Logic.openPostIt('overlay-postit-4')"
-      ></div>
+      <div id="daw-screen" class="hitbox" onclick="Logic.openLockedScreen()"></div>
+        <div id="postit-trigger" class="postit-room" onclick="Logic.openPostIt('overlay-postit-1')"></div>
+        <div id="postit-trigger2" class="postit-room" onclick="Logic.openPostIt('overlay-postit-2')"></div>
+        <div id="postit-trigger3" class="postit-room" onclick="Logic.openPostIt('overlay-postit-3')"></div>
+        <div id="postit-trigger4" class="postit-room" onclick="Logic.openPostIt('overlay-postit-4')"></div>
 
       <div id="overlay-postit-1" class="overlay hidden">
         <div class="postit-modal-content">
-          <button
-            class="close-btn"
-            onclick="Logic.closePostIt('overlay-postit-1')"
-          >
-            X
-          </button>
-          <img
-            src="assets/img/post it drop.png"
-            class="zoom-img"
-            v-if="sreencache"
-          />
+          <button class="close-btn" onclick="Logic.closePostIt('overlay-postit-1')"> X </button>
+          <img src="assets/img/post it drop.png" class="zoom-img" v-if="sreencache" />
         </div>
       </div>
       <div id="overlay-postit-2" class="overlay hidden">
         <div class="postit-modal-content">
-          <button
-            class="close-btn"
-            onclick="Logic.closePostIt('overlay-postit-2')"
-          >
-            X
-          </button>
-          <img
-            src="assets/img/post it refrain.png"
-            class="zoom-img"
-            v-if="sreencache"
-          />
+          <button class="close-btn" onclick="Logic.closePostIt('overlay-postit-2')"> X </button>
+          <img src="assets/img/post it refrain.png" class="zoom-img" v-if="sreencache" />
         </div>
       </div>
       <div id="overlay-postit-3" class="overlay hidden">
         <div class="postit-modal-content">
-          <button
-            class="close-btn"
-            onclick="Logic.closePostIt('overlay-postit-3')"
-          >
-            X
-          </button>
-          <img
-            src="assets/img/post it intro.png"
-            class="zoom-img"
-            v-if="sreencache"
-          />
+          <button class="close-btn" onclick="Logic.closePostIt('overlay-postit-3')"> X </button>
+          <img src="assets/img/post it intro.png" class="zoom-img" v-if="sreencache" />
         </div>
       </div>
       <div id="overlay-postit-4" class="overlay hidden">
         <div class="postit-modal-content">
-          <button
-            class="close-btn"
-            onclick="Logic.closePostIt('overlay-postit-4')"
-          >
-            X
-          </button>
-          <img
-            src="assets/img/post it outro.png"
-            class="zoom-img"
-            v-if="sreencache"
-          />
+          <button class="close-btn" onclick="Logic.closePostIt('overlay-postit-4')"> X </button>
+          <img src="assets/img/post it outro.png" class="zoom-img" v-if="sreencache" />
         </div>
       </div>
 
-      <div
-        id="trigger-faders"
-        class="zone-interactive"
-        onclick="FaderPuzzle.init()"
-      ></div>
+      <div id="trigger-faders" class="zone-interactive" onclick="FaderPuzzle.init()" ></div>
+
+     <div id="trigger-simon" class="zone-interactive" onclick="SimonPuzzle.init()" 
+        style="position: absolute; top: 60%; left: 1%; width: 150px; height: 80px; z-index: 60; cursor: pointer;">
+    </div>
     </section>
 
     <div id="overlay-phase" class="overlay hidden">
@@ -337,7 +281,7 @@ function startVideoWithSound() {
               value="0"
               orient="vertical"
             />
-            <label>BASS</label>
+            <label>basse</label>
           </div>
           <div class="fader-group">
             <input
@@ -348,7 +292,7 @@ function startVideoWithSound() {
               value="0"
               orient="vertical"
             />
-            <label>GUIT</label>
+            <label>Guitare</label>
           </div>
           <div class="fader-group">
             <input
@@ -359,7 +303,7 @@ function startVideoWithSound() {
               value="0"
               orient="vertical"
             />
-            <label>VOX</label>
+            <label>Voix</label>
           </div>
           <div class="fader-group">
             <input
@@ -370,7 +314,7 @@ function startVideoWithSound() {
               value="0"
               orient="vertical"
             />
-            <label>DRUM</label>
+            <label>Batterie</label>
           </div>
         </div>
 
@@ -378,6 +322,29 @@ function startVideoWithSound() {
           VÉRIFIER
         </button>
         <div id="fader-status">STATUS: EN ATTENTE</div>
+      </div>
+    </div>
+
+
+    <div id="overlay-simon" class="overlay hidden">
+      <div class="simon-container">
+        <div class="simon-header">
+          <h2>MÉMORISATION SONORE</h2>
+          <button class="close-btn" onclick="SimonPuzzle.close()">X</button>
+        </div>
+
+        <div class="keyboard-wrapper">
+            <img id="simon-img" src="assets/img/keyboard_base.png" alt="Clavier">
+            
+            <div id="key-1" class="key-zone" onclick="SimonPuzzle.playerClick('pink')" style="left: 31%; width: 3%;"></div>
+            <div id="key-2" class="key-zone" onclick="SimonPuzzle.playerClick('purple')" style="left: 55%; width: 4%;"></div> 
+            <div id="key-3" class="key-zone" onclick="SimonPuzzle.playerClick('darkblue')" style="left: 63%; width: 4%;"></div>
+            <div id="key-4" class="key-zone" onclick="SimonPuzzle.playerClick('lightblue')" style="left: 47%; width: 4%;"></div>
+            <div id="key-5" class="key-zone" onclick="SimonPuzzle.playerClick('green')" style="left: 75%; width: 3%;"></div>
+        </div>
+
+        <button id="btn-start-simon" onclick="SimonPuzzle.startSequence()">▶ ÉCOUTER LA SÉQUENCE</button>
+        <div id="simon-status">Prêt ?</div>
       </div>
     </div>
 
