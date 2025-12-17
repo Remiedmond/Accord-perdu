@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/game.css" />
     <link rel="stylesheet" href="css/systems.css" />
-    *
     <link rel="stylesheet" href="css/ruelle.css" />
+    <link rel="stylesheet" href="css/post-it.css" />
+    <link rel="stylesheet" href="css/interference.css" />
+    <link rel="stylesheet" href="css/mixage.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
@@ -138,19 +140,11 @@
         <div class="loading-bar"></div>
       </div>
 
-      <div id="drop-drums" class="dropzone" data-accept="drag-drums">
-        Batterie
-      </div>
-      <div id="drop-bass" class="dropzone" data-accept="drag-bass">Basse</div>
-      <div id="drop-melody" class="dropzone" data-accept="drag-melody">
-        Mélodie
-      </div>
-
-      <div id="tracks-rack">
+      <!--<div id="tracks-rack">
         <div id="drag-drums" class="draggable-item track-drums">Batterie</div>
         <div id="drag-bass" class="draggable-item track-bass">Basse</div>
         <div id="drag-melody" class="draggable-item track-melody">Mélodie</div>
-      </div>
+      </div> !-->
 
       <div id="locked-overlay" class="hidden">
         <div class="screen-container">
@@ -175,12 +169,205 @@
         </div>
       </div>
 
+      <div id="pc-main-overlay" class="hidden">
+        <div class="screen-container">
+          <img src="assets/img/écran pc.png" alt="Bureau Principal" />
+          <div
+            id="icon-phase-puzzle"
+            onclick="PhasePuzzle.init()"
+            style="z-index: 2000; position: absolute; cursor: pointer"
+          >
+            <span style="font-size: 40px">📉</span>
+            <span class="icon-label">Signal.exe</span>
+          </div>
+
+          <button class="close-btn-screen" onclick="Logic.closeDesktop()">
+            X
+          </button>
+        </div>
+      </div>
+
       <div
         id="daw-screen"
         class="hitbox"
         onclick="Logic.openLockedScreen()"
       ></div>
+
+      <div
+        id="postit-trigger"
+        class="postit-room"
+        onclick="Logic.openPostIt('overlay-postit-1')"
+      ></div>
+      <div
+        id="postit-trigger2"
+        class="postit-room"
+        onclick="Logic.openPostIt('overlay-postit-2')"
+      ></div>
+      <div
+        id="postit-trigger3"
+        class="postit-room"
+        onclick="Logic.openPostIt('overlay-postit-3')"
+      ></div>
+      <div
+        id="postit-trigger4"
+        class="postit-room"
+        onclick="Logic.openPostIt('overlay-postit-4')"
+      ></div>
+
+      <div id="overlay-postit-1" class="overlay hidden">
+        <div class="postit-modal-content">
+          <button
+            class="close-btn"
+            onclick="Logic.closePostIt('overlay-postit-1')"
+          >
+            X
+          </button>
+          <img
+            src="assets/img/post it drop.png"
+            class="zoom-img"
+            v-if="sreencache"
+          />
+        </div>
+      </div>
+      <div id="overlay-postit-2" class="overlay hidden">
+        <div class="postit-modal-content">
+          <button
+            class="close-btn"
+            onclick="Logic.closePostIt('overlay-postit-2')"
+          >
+            X
+          </button>
+          <img
+            src="assets/img/post it refrain.png"
+            class="zoom-img"
+            v-if="sreencache"
+          />
+        </div>
+      </div>
+      <div id="overlay-postit-3" class="overlay hidden">
+        <div class="postit-modal-content">
+          <button
+            class="close-btn"
+            onclick="Logic.closePostIt('overlay-postit-3')"
+          >
+            X
+          </button>
+          <img
+            src="assets/img/post it intro.png"
+            class="zoom-img"
+            v-if="sreencache"
+          />
+        </div>
+      </div>
+      <div id="overlay-postit-4" class="overlay hidden">
+        <div class="postit-modal-content">
+          <button
+            class="close-btn"
+            onclick="Logic.closePostIt('overlay-postit-4')"
+          >
+            X
+          </button>
+          <img
+            src="assets/img/post it outro.png"
+            class="zoom-img"
+            v-if="sreencache"
+          />
+        </div>
+      </div>
+
+      <div
+        id="trigger-faders"
+        class="zone-interactive"
+        onclick="FaderPuzzle.init()"
+        style="top: 55%; left: 60%; width: 120px; height: 80px; z-index: 60"
+      ></div>
     </section>
+
+    <div id="overlay-phase" class="overlay hidden">
+      <div class="phase-container">
+        <div class="phase-header">
+          <h2>SIGNAL CORROMPU</h2>
+          <button class="close-btn" onclick="PhasePuzzle.close()">X</button>
+        </div>
+
+        <canvas id="phaseCanvas" width="600" height="300"></canvas>
+
+        <div class="phase-controls">
+          <p>Alignez les ondes pour restaurer le son</p>
+          <input
+            type="range"
+            id="phase-slider"
+            min="0"
+            max="360"
+            value="180"
+            oninput="PhasePuzzle.updateVal(this.value)"
+          />
+        </div>
+
+        <div id="phase-status">STATUS: SILENCE</div>
+      </div>
+    </div>
+
+    <div id="overlay-faders" class="overlay hidden">
+      <div class="fader-container">
+        <div class="fader-header">
+          <h2>RÉGLAGE DES NIVEAUX</h2>
+          <button class="close-btn" onclick="FaderPuzzle.close()">X</button>
+        </div>
+
+        <div class="faders-rack">
+          <div class="fader-group">
+            <input
+              type="range"
+              id="fader-1"
+              min="0"
+              max="100"
+              value="0"
+              orient="vertical"
+            />
+            <label>BASS</label>
+          </div>
+          <div class="fader-group">
+            <input
+              type="range"
+              id="fader-2"
+              min="0"
+              max="100"
+              value="0"
+              orient="vertical"
+            />
+            <label>GUIT</label>
+          </div>
+          <div class="fader-group">
+            <input
+              type="range"
+              id="fader-3"
+              min="0"
+              max="100"
+              value="0"
+              orient="vertical"
+            />
+            <label>VOX</label>
+          </div>
+          <div class="fader-group">
+            <input
+              type="range"
+              id="fader-4"
+              min="0"
+              max="100"
+              value="0"
+              orient="vertical"
+            />
+            <label>DRUM</label>
+          </div>
+        </div>
+
+        <button class="btn-check-mix" onclick="FaderPuzzle.check()">
+          VÉRIFIER
+        </button>
+        <div id="fader-status">STATUS: EN ATTENTE</div>
+      </div>
+    </div>
 
     <script src="js/timer.js"></script>
     <script src="js/hints.js"></script>
@@ -188,5 +375,6 @@
     <script src="js/main.js"></script>
     <script src="js/puzzles.js"></script>
     <script src="js/drag_logic.js"></script>
+    <script src="js/phase_int.js"></script>
   </body>
 </html>
