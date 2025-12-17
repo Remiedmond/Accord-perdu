@@ -1,0 +1,48 @@
+/* Fond noir */
+#overlay-simon {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95); 
+    z-index: 9999 !important;
+    display: flex; justify-content: center; align-items: center;
+}
+
+/* Boîte du jeu */
+.simon-container {
+    background: #222; border: 4px solid #888; padding: 20px;
+    border-radius: 10px; width: 700px; text-align: center; color: white;
+}
+
+/* Conteneur de l'image du clavier */
+.keyboard-wrapper {
+    position: relative; /* Important pour les zones absolues */
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* L'image elle-même */
+#simon-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* Les zones invisibles pour cliquer */
+.key-zone {
+    position: absolute;
+    bottom: 9%; /* Ajusté pour correspondre au bas des touches blanches */
+    height: 52%; /* Hauteur des touches blanches */
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Pour la note violette (touche noire), on ajuste la position dans le HTML directement */
+
+#btn-start-simon {
+    padding: 15px 30px; font-size: 1.2rem; cursor: pointer;
+    background: #f1c40f; border: none; font-weight: bold; border-radius: 5px; color: #000;
+}
+#btn-start-simon:hover { background: #f39c12; }
+
+#simon-status { margin-top: 15px; font-size: 1.2rem; font-weight: bold; color: #aaa; }

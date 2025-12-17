@@ -148,3 +148,137 @@ const FaderPuzzle = {
     }
   },
 };
+
+/* === PUZZLE SIMON (IMAGE CLAVIER) === */
+
+const SimonPuzzle = {
+  // La séquence secrète basée sur tes noms de fichiers
+  // Séquence vidéo : Vert, Bleu Foncé, Bleu Ciel, Vert
+  secretSequence: ["green", "darkblue", "lightblue", "green"],
+
+  playerInput: [],
+  isPlayingDemo: false,
+  isSolved: false,
+  baseImage: "assets/img/keyboard_base.png", // Image par défaut
+
+  init: function () {
+    document.getElementById("overlay-simon").classList.remove("hidden");
+    this.resetGame();
+  },
+
+  close: function () {
+    document.getElementById("overlay-simon").classList.add("hidden");
+  },
+
+  resetGame: function () {
+    this.playerInput = [];
+    this.isPlayingDemo = false;
+    document.getElementById("simon-status").innerText = "Appuie sur 'ÉCOUTER'";
+    document.getElementById("simon-status").style.color = "#aaa";
+    document.getElementById("simon-img").src = this.baseImage;
+  },
+
+  // 1. L'ordi joue la séquence
+  startSequence: function () {
+    if (this.isPlayingDemo || this.isSolved) return;
+
+    this.playerInput = [];
+    this.isPlayingDemo = true;
+    document.getElementById("simon-status").innerText =
+      "Regarde bien les touches...";
+
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= this.secretSequence.length) {
+        clearInterval(interval);
+        this.isPlayingDemo = false;
+        document.getElementById("simon-status").innerText = "À toi de jouer !";
+        document.getElementById("simon-status").style.color = "white";
+        return;
+      }
+      this.flashKey(this.secretSequence[i]);
+      i++;
+    }, 1000); // 1 seconde entre chaque note
+  },
+
+  // Fonction qui change l'image pour simuler la lumière
+  flashKey: function (colorName) {
+    const img = document.getElementById("simon-img");
+
+    // On change la source pour l'image colorée
+    // Ex: assets/img/key_green.png
+    img.src = `assets/img/key_${colorName}.png`;
+
+    // SON (Optionnel)
+    // new Audio(`assets/sounds/${colorName}.mp3`).play();
+
+    // Après 500ms, on remet l'image vierge
+    setTimeout(() => {
+      img.src = this.baseImage;
+    }, 500);
+  },
+
+  // 2. Quand le joueur clique sur une zone invisible
+  playerClick: function (colorName) {
+    if (this.isPlayingDemo || this.isSolved) return;
+
+    if (document.getElementById("simon-status").innerText.includes("Appuie")) {
+      this.flashKey(colorName);
+      return; // Juste pour tester le son/image
+    }
+
+    // Feedback visuel (la touche s'allume quand on clique)
+    this.flashKey(colorName);
+
+    this.playerInput.push(colorName);
+
+    // VÉRIFICATION
+    const currentStep = this.playerInput.length - 1;
+
+    if (this.playerInput[currentStep] !== this.secretSequence[currentStep]) {
+      // ERREUR
+      document.getElementById("simon-status").innerText =
+        "Fausse note ! Recommence.";
+      document.getElementById("simon-status").style.color = "#e74c3c";
+      this.playerInput = [];
+
+      // Petit effet de secousse
+      anime({
+        targets: ".simon-container",
+        translateX: [-10, 10, 0],
+        duration: 300,
+      });
+    } else {
+      // Si la séquence est finie et correcte
+      if (this.playerInput.length === this.secretSequence.length) {
+        this.victory();
+      }
+    }
+  },
+
+  victory: function () {
+    this.isSolved = true;
+    document.getElementById("simon-status").innerText = "MÉLODIE CORRECTE !";
+    document.getElementById("simon-status").style.color = "#2ecc71";
+
+    setTimeout(() => {
+      this.close();
+
+      // Ouvre la grande modale de victoire
+      const modalOverlay = document.getElementById("modal-overlay");
+      const modalImg = document.getElementById("modal-img");
+      const modalDesc = document.getElementById("modal-desc");
+
+      // Utilise une image de victoire (ex: piano_ok.png ou une autre)
+      modalImg.src = "assets/img/signal_ok.png";
+      modalImg.style.display = "block";
+
+      modalDesc.innerHTML = `
+                <h2 style="color:#2ecc71">PARTITION DÉCHIFFRÉE</h2>
+                <p>Tu as débloqué un nouvel indice !</p>
+            `;
+
+      modalOverlay.classList.remove("hidden");
+    }, 1000);
+  },
+};
