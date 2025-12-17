@@ -1,12 +1,10 @@
-/* Fichier: js/drag_logic.js */
-
 const Logic = {
     // --- ÉTAT DU JEU (STUDIO) ---
     fusesFixed: 0,
     bootTimeout: null,
     isSystemReady: false,
     isUnlocked: false,
-    pcPassword: "EVAN",
+    pcPassword: "BEAT",
     musicTracksPlaced: 0,
 
     // --- INITIALISATION ---
@@ -137,7 +135,7 @@ const Logic = {
         this.bootTimeout = setTimeout(() => {
             bootScreen.classList.add('hidden');
             this.isSystemReady = true;
-            console.log("PC Démarré");
+            console.log("PC ouvert");
         }, 3500);
     },
 
@@ -145,26 +143,33 @@ const Logic = {
     // 2. LOGIQUE ORDINATEUR (PASSWORD)
     // ============================================
     openLockedScreen: function() {
-        // On ne peut ouvrir que si courant ON et PC démarré
         if (this.isSystemReady && this.fusesFixed === 3) {
-            // Si déjà déverrouillé, on ne montre plus l'écran de login, mais direct le DAW ?
-            // Pour ce jeu, on considère que si c'est déverrouillé, le rack apparait déjà.
-            // Mais si le joueur re-clique :
-            if(!this.isUnlocked) {
+            
+            if (!this.isUnlocked) {
                 document.getElementById('locked-overlay').classList.remove('hidden');
-                setTimeout(() => document.getElementById('pc-password').focus(), 100);
+                setTimeout(() => {
+                    const pwd = document.getElementById('pc-password');
+                    if(pwd) pwd.focus();
+                }, 100);
             } else {
-                 // Feedback si déjà ouvert
-                 console.log("Déjà déverrouillé");
+                this.openDesktop();
             }
+
         } else {
-            // Feedback visuel "Pas de courant" ?
             anime({
                 targets: '#daw-screen',
                 translateX: [0, -5, 5, 0],
                 duration: 200
             });
         }
+    },
+    openDesktop: function() {
+        document.getElementById('pc-main-overlay').classList.remove('hidden');
+       
+    },
+
+    closeDesktop: function() {
+        document.getElementById('pc-main-overlay').classList.add('hidden');
     },
 
     closeLockedScreen: function() {
@@ -188,6 +193,29 @@ const Logic = {
         }
     },
 
+    openPostIt: function(idModale) {
+        if (this.fusesFixed === 3) {
+            const fenetre = document.getElementById(idModale);
+            if (fenetre) {
+                fenetre.classList.remove('hidden');
+                this.sreencache = true;
+            }
+        } 
+        else {
+            console.log("Trop sombre pour lire !");
+            this.sreencache = false;
+        }
+    },
+
+    closePostIt: function(idModale) {
+    // Ferme la modale spécifique
+    const fenetre = document.getElementById(idModale);
+    if (fenetre) {
+        fenetre.classList.add('hidden');
+    }
+},
+
+    /*
     showMusicInterface: function() {
         // Faire apparaître le rack d'instruments
         const rack = document.getElementById('tracks-rack');
@@ -200,10 +228,12 @@ const Logic = {
             duration: 800,
             easing: 'easeOutExpo'
         });
-        
+    
         // Passer à l'objectif suivant dans Hints.js
         if(typeof HintSystem !== 'undefined') HintSystem.completeObjective('entrer-studio');
     },
+*/
+
 
     // ============================================
     // 3. LOGIQUE MUSIQUE (DRAG & DROP)

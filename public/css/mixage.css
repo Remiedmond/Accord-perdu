@@ -1,0 +1,52 @@
+#trigger-faders {
+    position: absolute;
+    cursor: pointer;
+    border: 2px solid yellow; 
+    border-radius: 5px;
+}
+#trigger-faders:hover {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Petit effet au survol */
+}
+
+#overlay-faders {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95); 
+    z-index: 745;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.fader-container {
+    background: #222; border: 2px solid #555; padding: 30px;
+    border-radius: 10px; width: 500px; text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    color: white; font-family: sans-serif;
+}
+
+.faders-rack {
+    display: flex; justify-content: space-around; margin: 30px 0;
+    background: #111; padding: 20px; border-radius: 5px; border-top: 5px solid #333;
+}
+
+.fader-group {
+    display: flex; flex-direction: column; align-items: center; height: 180px;
+}
+
+/* Style pour les sliders verticaux */
+.fader-group input[type=range] {
+    writing-mode: bt-lr; /* Pour IE/Edge */
+    -webkit-appearance: slider-vertical; /* Pour Chrome/Safari/Brave */
+    width: 30px; height: 130px; cursor: pointer;
+}
+
+.fader-group label {
+    color: #888; margin-top: 15px; font-family: monospace; font-weight: bold; font-size: 14px;
+}
+
+.btn-check-mix {
+    background: #3498db; color: white; border: none; padding: 10px 30px;
+    font-size: 1rem; cursor: pointer; border-radius: 5px; margin-top: 10px;
+    text-transform: uppercase; font-weight: bold;
+}
+.btn-check-mix:hover { background: #2980b9; }
+
+#fader-status { margin-top: 15px; font-weight: bold; font-size: 14px; min-height: 20px;}

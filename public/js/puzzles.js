@@ -78,3 +78,75 @@ const Puzzles = {
     }
   },
 };
+
+
+
+
+/* === PUZZLE FADERS (TABLE DE MIXAGE) === */
+
+const FaderPuzzle = {
+    // La solution attendue (Valeurs entre 0 et 100)
+    // Astuce : Tu peux écrire ces chiffres sur un mur ou un post-it dans le jeu !
+    solution: [75, 20, 100, 50], 
+    tolerance: 10, // Marge d'erreur autorisée (ex: si cible 80, 75 à 85 est accepté)
+    isSolved: false,
+
+    init: function() {
+        // Optionnel : Vérifier si courant allumé
+        // if (Logic.fusesFixed < 3) { console.log("Pas de courant"); return; }
+        
+        document.getElementById('overlay-faders').classList.remove('hidden');
+    },
+
+    close: function() {
+        document.getElementById('overlay-faders').classList.add('hidden');
+    },
+
+    check: function() {
+        if(this.isSolved) return;
+
+        let isCorrect = true;
+        
+        // On vérifie les 4 faders
+        for (let i = 1; i <= 4; i++) {
+            let val = parseInt(document.getElementById('fader-' + i).value);
+            let target = this.solution[i-1];
+
+            // Si la valeur est trop loin de la cible
+            if (val < target - this.tolerance || val > target + this.tolerance) {
+                isCorrect = false;
+            }
+        }
+
+        const status = document.getElementById('fader-status');
+        
+        if (isCorrect) {
+            // VICTOIRE
+            this.isSolved = true;
+            status.innerHTML = "RÉGLAGES PARFAITS !";
+            status.style.color = "#2ecc71";
+            
+            // Son de succès
+            // new Audio('assets/sounds/success.mp3').play();
+
+            setTimeout(() => {
+                alert("Bravo ! Tu as récupéré... ");
+                // Exemple : Ajouter un objet à l'inventaire
+                // Game.addToInventory('cle-usb'); 
+                this.close();
+            }, 1000);
+
+        } else {
+            // ÉCHEC
+            status.innerHTML = "MAUVAIS RÉGLAGES...";
+            status.style.color = "#e74c3c";
+            
+            // Petite secousse de la fenêtre
+            anime({
+                targets: '.fader-container',
+                translateX: [-5, 5, -5, 5, 0],
+                duration: 400
+            });
+        }
+    }
+};
