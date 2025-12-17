@@ -1,8 +1,7 @@
-/* Contenu de js/phase_int.js */
 
 const PhasePuzzle = {
     init: function() {
-        console.log("OUVERTURE DU PUZZLE !"); // Regarde la console (F12) si tu vois ça
+        console.log("OUVERTURE DU PUZZLE !"); 
         
         const overlay = document.getElementById('overlay-phase');
         if(overlay) {
@@ -60,11 +59,33 @@ const PhasePuzzle = {
 
     checkWin: function() {
         if (this.playerPhase < 15 || this.playerPhase > 345) {
+            
             if(!this.isSolved) {
                 this.isSolved = true;
-                document.getElementById('phase-status').innerText = "SYNCHRONISÉ !";
-                document.getElementById('phase-status').style.color = "#0f0";
-                setTimeout(() => { this.close(); alert("Gagné !"); }, 1000);
+                
+                const status = document.getElementById('phase-status');
+                status.innerText = "SYNCHRONISÉ !";
+                status.style.color = "#2ecc71";
+
+                setTimeout(() => { 
+                    this.close(); 
+                    const modalOverlay = document.getElementById('modal-overlay');
+                    const modalImg = document.getElementById('modal-img');
+                    const modalDesc = document.getElementById('modal-desc');
+
+                    modalImg.src = "assets/img/instructions volume.png"; 
+                    
+                    modalImg.style.display = "block"; 
+                    modalImg.style.maxWidth = "100%";
+                    
+                    modalDesc.innerHTML = `
+                        <h2 style="color:#2ecc71; margin-top:0;">SIGNAL RÉTABLI</h2>
+                        <p>L'interférence est supprimée.</p>
+                    `;
+
+                    modalOverlay.classList.remove('hidden');
+
+                }, 1000);
             }
         }
     }
