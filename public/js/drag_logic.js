@@ -193,6 +193,29 @@ const Logic = {
         }
     },
 
+    openPostIt: function(idModale) {
+        if (this.fusesFixed === 3) {
+            const fenetre = document.getElementById(idModale);
+            if (fenetre) {
+                fenetre.classList.remove('hidden');
+                this.sreencache = true;
+            }
+        } 
+        else {
+            console.log("Trop sombre pour lire !");
+            this.sreencache = false;
+        }
+    },
+
+    closePostIt: function(idModale) {
+    // Ferme la modale spécifique
+    const fenetre = document.getElementById(idModale);
+    if (fenetre) {
+        fenetre.classList.add('hidden');
+    }
+},
+
+    /*
     showMusicInterface: function() {
         // Faire apparaître le rack d'instruments
         const rack = document.getElementById('tracks-rack');
@@ -205,10 +228,12 @@ const Logic = {
             duration: 800,
             easing: 'easeOutExpo'
         });
-        
+    
         // Passer à l'objectif suivant dans Hints.js
         if(typeof HintSystem !== 'undefined') HintSystem.completeObjective('entrer-studio');
     },
+*/
+
 
     // ============================================
     // 3. LOGIQUE MUSIQUE (DRAG & DROP)
