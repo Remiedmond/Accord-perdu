@@ -13,8 +13,8 @@
 
 #door-zone {
   position: absolute;
-  top: 29%;
-  right: 23%; /* Ajuste selon ton dessin */
+  top: 26%;
+  right: 26%; /* Ajuste selon ton dessin */
   width: 60px;
   height: 90px;
   cursor: pointer;
