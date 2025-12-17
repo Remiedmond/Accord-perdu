@@ -92,10 +92,15 @@ const FaderPuzzle = {
     isSolved: false,
 
     init: function() {
-        // Optionnel : Vérifier si courant allumé
-        // if (Logic.fusesFixed < 3) { console.log("Pas de courant"); return; }
+       if (Logic.fusesFixed < 3) {
+         console.log("Pas de courant"); return;
+
+        }
+        else{ 
+          document.getElementById('overlay-faders').classList.remove('hidden');
+        }
         
-        document.getElementById('overlay-faders').classList.remove('hidden');
+        
     },
 
     close: function() {

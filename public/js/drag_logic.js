@@ -181,7 +181,7 @@ const Logic = {
         if (input.value.toUpperCase() === this.pcPassword) {
             this.isUnlocked = true;
             this.closeLockedScreen();
-            this.showMusicInterface();
+            this.openDesktop();
         } else {
             anime({
                 targets: '.screen-container',
