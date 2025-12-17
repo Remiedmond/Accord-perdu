@@ -161,11 +161,14 @@ const SimonPuzzle = {
   isSolved: false,
   baseImage: "assets/img/keyboard_base.png", // Image par défaut
 
-  init: function () {
+ init: function () {
+    if (FaderPuzzle.isSolved === false) {
+        
+        return; 
+    }
     document.getElementById("overlay-simon").classList.remove("hidden");
     this.resetGame();
   },
-
   close: function () {
     document.getElementById("overlay-simon").classList.add("hidden");
   },
@@ -281,4 +284,111 @@ const SimonPuzzle = {
       modalOverlay.classList.remove("hidden");
     }, 1000);
   },
+  /* Dans l'objet SimonPuzzle... */
+
+    victory: function() {
+        this.isSolved = true;
+        document.getElementById('simon-status').innerText = "MÉLODIE CORRECTE !";
+        document.getElementById('simon-status').style.color = "#2ecc71";
+
+        setTimeout(() => {
+            this.close(); // On ferme le Simon
+
+            // 1. DÉBLOQUER L'ICÔNE SUR L'ORDINATEUR
+            const icon = document.getElementById('icon-notes');
+            if(icon) {
+                icon.classList.remove('hidden'); // L'icône apparaît !
+                // Petit effet visuel pour montrer qu'il y a du nouveau sur le PC
+                // (Optionnel : fait clignoter l'écran du PC dans le studio)
+            }
+
+            // 2. AFFICHER LA MODALE DE RÉCOMPENSE
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalImg = document.getElementById('modal-img');
+            const modalDesc = document.getElementById('modal-desc');
+
+            // Image de récompense (ex: Clé USB ou Fichier débloqué)
+            // Assure-toi d'avoir une image ou mets-en une temporaire
+            modalImg.src = "assets/img/icon_unlocked.png"; // Si tu n'as pas l'image, le texte suffira
+            modalImg.style.display = "block";
+
+            modalDesc.innerHTML = `
+                <h2 style="color:#2ecc71">LOGICIEL DÉVERROUILLÉ</h2>
+                <p>Une nouvelle icône "Partition.exe" est apparue sur le bureau de l'ordinateur.</p>
+            `;
+            
+            modalOverlay.classList.remove('hidden');
+
+        }, 1000);
+    }
+};
+
+const NotesPuzzle = {
+   
+    sequence: ['re', 'do', 'sol', 'fa', 'mi'],
+    
+    currentStep: 0,
+
+    init: function() {
+        document.getElementById('overlay-notes').classList.remove('hidden');
+        this.reset();
+    },
+
+    close: function() {
+        document.getElementById('overlay-notes').classList.add('hidden');
+    },
+
+    reset: function() {
+        this.currentStep = 0;
+        document.getElementById('notes-status').innerText = "En attente...";
+        document.getElementById('notes-status').style.color = "#aaa";
+    },
+
+    check: function(noteClicked) {
+        // On regarde quelle note on attend à cette étape
+        const expectedNote = this.sequence[this.currentStep];
+
+        if (noteClicked === expectedNote) {
+            // --- BONNE NOTE ---
+            this.currentStep++;
+            
+            // Feedback visuel discret (optionnel)
+            document.getElementById('notes-status').innerText = "Note enregistrée...";
+            document.getElementById('notes-status').style.color = "#fff";
+
+            // Est-ce que c'est la fin ?
+            if (this.currentStep >= this.sequence.length) {
+                this.victory();
+            }
+        } else {
+            // --- MAUVAISE NOTE ---
+            // On remet tout à zéro direct !
+            this.currentStep = 0;
+            
+            // Message d'erreur
+            const status = document.getElementById('notes-status');
+            status.innerText = "Séquence incorrecte. Reset.";
+            status.style.color = "#e74c3c"; // Rouge
+            
+            // Petite secousse de la fenêtre
+            anime({ targets: '.notes-container', translateX: [-10, 10, 0], duration: 300 });
+        }
+    },
+
+    victory: function() {
+        // 1. Fermer le puzzle
+        this.close();
+
+        // 2. Ouvrir l'écran vidéo
+        const videoOverlay = document.getElementById('overlay-victory-video');
+        const video = document.getElementById('final-video');
+        
+        if(videoOverlay && video) {
+            videoOverlay.classList.remove('hidden');
+            // Lancer la vidéo
+            video.play().catch(e => console.log("Clic requis pour lancer la vidéo"));
+        } else {
+            alert("VICTOIRE ! (Vidéo introuvable)");
+        }
+    }
 };

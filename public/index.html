@@ -196,6 +196,12 @@ function startVideoWithSound() {
             <span class="icon-label">Signal.exe</span>
           </div>
 
+          <div id="icon-notes" onclick="NotesPuzzle.init()" class="hidden"
+              style="position: absolute; top: 22%; left: 40%; width: 80px; cursor: pointer; text-align: center; color: white; z-index: 2000;">
+              <span style="font-size: 40px;">🎼</span>
+              <span style="display:block; font-size:14px; margin-top:5px;">Partition.exe</span>
+          </div>
+
           <button class="close-btn-screen" onclick="Logic.closeDesktop()">
             X
           </button>
@@ -236,7 +242,7 @@ function startVideoWithSound() {
       <div id="trigger-faders" class="zone-interactive" onclick="FaderPuzzle.init()" ></div>
 
      <div id="trigger-simon" class="zone-interactive" onclick="SimonPuzzle.init()" 
-        style="position: absolute; top: 60%; left: 1%; width: 150px; height: 80px; z-index: 60; cursor: pointer;">
+        style="position: absolute; top: 41%; left: 0%; width: 150px; height: 80px; z-index: 60; cursor: pointer;">
     </div>
     </section>
 
@@ -348,6 +354,40 @@ function startVideoWithSound() {
         <div id="simon-status">Prêt ?</div>
       </div>
     </div>
+
+    <div id="overlay-notes" class="overlay hidden">
+        <div class="notes-container">
+          <div class="notes-header">
+            <h2>DÉCRYPTAGE SONORE</h2>
+            <button class="close-btn" onclick="NotesPuzzle.close()">X</button>
+          </div>
+
+          <p style="margin-bottom: 20px; color: #aaa;">Entrez la séquence harmonique correcte.</p>
+
+          <div class="notes-keyboard">
+            <button class="note-btn" onclick="NotesPuzzle.check('do')">DO</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('re')">RE</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('mi')">MI</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('fa')">FA</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('sol')">SOL</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('la')">LA</button>
+            <button class="note-btn" onclick="NotesPuzzle.check('si')">SI</button>
+          </div>
+
+          <div id="notes-status">En attente...</div>
+        </div>
+      </div>
+
+      <div id="overlay-victory-video" class="overlay hidden" style="background: black; z-index: 10000; display:flex; justify-content:center; align-items:center;">
+          <video id="final-video" src="assets/video/fin.mp4" 
+                style="width: 100%; height: 100%; object-fit: contain;" 
+                controls>
+          </video>
+          <button onclick="location.reload()" 
+                  style="position: absolute; bottom: 20px; right: 20px; padding: 10px 20px; cursor: pointer; background:white; border:none; border-radius:5px;">
+              Recommencer le jeu
+          </button>
+      </div>
 
     <script src="js/timer.js"></script>
     <script src="js/hints.js"></script>

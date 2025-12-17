@@ -358,3 +358,35 @@
 /* Ajustement facultatif : si vous voulez que les dropzones soient visibles 
    uniquement quand on zoom, il faudra gérer ça en JS. 
    Pour l'instant, on les laisse visibles. */
+
+
+   /* --- LE PUZZLE DES NOTES --- */
+#overlay-notes {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.95); z-index: 9999 !important;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.notes-container {
+    background: #2c3e50; border: 4px solid #ecf0f1; padding: 40px;
+    border-radius: 15px; width: 600px; text-align: center; color: white;
+    font-family: sans-serif;
+}
+
+.notes-keyboard {
+    display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px;
+}
+
+.note-btn {
+    width: 70px; height: 70px; border-radius: 50%; border: none;
+    background: white; color: #2c3e50; font-weight: bold; font-size: 1.2rem;
+    cursor: pointer; transition: transform 0.1s;
+    box-shadow: 0 5px 0 #bdc3c7;
+}
+
+.note-btn:active {
+    transform: translateY(4px); box-shadow: none;
+}
+.note-btn:hover { background-color: #ecf0f1; }
+
+#notes-status { margin-top: 30px; height: 20px; font-weight: bold; min-height: 1.5em;}
