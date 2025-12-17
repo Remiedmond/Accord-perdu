@@ -42,15 +42,14 @@
         text-shadow: 0 0 10px #2ecc71;
     }
 
-    /* --- L'ICÔNE SUR LE BUREAU --- */
     #icon-phase-puzzle {
         position: absolute;
-        top: 20%;
-        left: 20%;
+        top: 22%;
+        left: 25%;
         width: 80px;
-        height: 80px; /* Important de donner une hauteur */
+        height: 80px; 
         cursor: pointer;
-        z-index: 1000 !important; /* On force pour être sûr qu'il est cliquable */
+        z-index: 1000; 
         display: flex;
         flex-direction: column;
         align-items: center;
