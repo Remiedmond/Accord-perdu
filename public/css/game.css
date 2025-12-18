@@ -390,3 +390,47 @@
 .note-btn:hover { background-color: #ecf0f1; }
 
 #notes-status { margin-top: 30px; height: 20px; font-weight: bold; min-height: 1.5em;}
+
+
+
+
+/* --- ÉCRAN DE VICTOIRE (VIDÉO FINALE) --- */
+#overlay-victory-video {
+    position: fixed;           /* Reste fixe par rapport à l'écran */
+    top: 0;
+    left: 0;
+    width: 100vw;              /* 100% de la largeur de la vue */
+    height: 100vh;             /* 100% de la hauteur de la vue */
+    background-color: black;   /* Fond noir pour cacher le jeu derrière */
+    
+    /* Z-INDEX SUPRÊME : Doit être plus haut que le timer (souvent 1000) et les notes */
+    z-index: 20000 !important; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#final-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+}
+
+#btn-restart {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 20001;
+}
+#btn-restart:hover {
+    background: #ccc;
+}

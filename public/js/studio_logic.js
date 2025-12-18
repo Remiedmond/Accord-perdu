@@ -105,12 +105,12 @@ const StudioGame = {
         GameState.showThought("Hmm... Attendons un peu...");
       }
 
-      // ⭐ TIMER DE 15 SECONDES
+      // ⭐ TIMER DE 2 SECONDES
       this.timerMI = setTimeout(() => {
         this.donnerNoteMI();
-      }, 15000); // 15 secondes
+      }, 2000); 
 
-      console.log("⏱️ Timer 15s démarré pour la note MI");
+      console.log("⏱️ Timer 2s démarré pour la note MI");
     }
   },
 
