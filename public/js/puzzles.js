@@ -1,21 +1,18 @@
-/* Fichier: js/puzzle.js */
+/* ======== PUZZLES CORRIGÉS - VERSION FINALE COMPLÈTE ======== */
 
 const Puzzles = {
   codeSaisi: "",
   codeSecret: "2612",
 
-  // Ouvre le digicode
   openDigicode: function () {
     document.getElementById("overlay-digicode").classList.remove("hidden");
   },
 
-  // Ferme le digicode et remet à zéro
   closeDigicode: function () {
     document.getElementById("overlay-digicode").classList.add("hidden");
     this.resetCode();
   },
 
-  // Fonction pour taper un chiffre
   typeCode: function (chiffre) {
     if (this.codeSaisi.length < 4) {
       this.codeSaisi += chiffre;
@@ -23,20 +20,16 @@ const Puzzles = {
     }
   },
 
-  // --- NOUVELLE FONCTION : Bouton "C" (Corriger) ---
   resetCode: function () {
     this.codeSaisi = "";
     this.updateScreen();
   },
 
-  // Met à jour l'écran du digicode
   updateScreen: function () {
-    // Affiche des tirets si vide, ou le code tapé
     const screen = document.getElementById("digicode-screen");
     screen.innerText = this.codeSaisi === "" ? "_ _ _ _" : this.codeSaisi;
   },
 
-  // Validation du code avec la MODALE
   validateCode: function () {
     const modalOverlay = document.getElementById("modal-overlay");
     const modalDesc = document.getElementById("modal-desc");
@@ -46,55 +39,180 @@ const Puzzles = {
       modalImg.style.display = "none";
       modalDesc.innerHTML =
         "<h2 style='color:#0f0'>ACCÈS AUTORISÉ</h2><p>Bienvenue au Studio.</p>";
-
-      // 2. On affiche la modale
       modalOverlay.classList.remove("hidden");
-      HintSystem.completeObjective("entrer-studio");
 
-      // 3. Après 2 secondes, on ferme tout et on change de salle
+      if (typeof HintSystem !== "undefined") {
+        HintSystem.completeObjective("entrer-studio");
+      }
+
       setTimeout(() => {
-        modalOverlay.classList.add("hidden"); // Ferme la modale
-        this.closeDigicode(); // Ferme le digicode
-        Game.changeScene("scene-studio"); // Change la scène !
+        modalOverlay.classList.add("hidden");
+        this.closeDigicode();
+        Game.changeScene("scene-studio");
+
+        // Pensée en entrant dans le studio
+        setTimeout(() => {
+          if (typeof GameState !== "undefined") {
+            GameState.showThought(
+              "Il fait sombre ici, je devrais rallumer le courant."
+            );
+          }
+        }, 1000);
       }, 1000);
     } else {
-      // --- CAS 2 : ERREUR ---
-
-      // 1. On secoue l'écran (Feedback visuel avec Anime.js)
       anime({
         targets: ".digicode-container",
         translateX: [{ value: -10 }, { value: 10 }, { value: 0 }],
         duration: 300,
       });
-
-      // 2. On affiche la modale "Erreur"
-      modalImg.style.display = "none"; // On cache l'image
+      modalImg.style.display = "none";
       modalDesc.innerHTML =
         "<h2 style='color:red'>ERREUR</h2><p>Code incorrect.</p>";
       modalOverlay.classList.remove("hidden");
-
-      // 3. On efface le code pour recommencer
       this.resetCode();
     }
   },
 };
 
-/* === PUZZLE FADERS (TABLE DE MIXAGE) === */
+/* ======== PUZZLE PHASE (ÉGALISATION) ======== */
+const PhasePuzzle = {
+  init: function () {
+    // Vérifier l'ordre
+    if (
+      typeof GameState !== "undefined" &&
+      !GameState.canAccessPuzzle("phase")
+    ) {
+      GameState.showNotYetMessage();
+      return;
+    }
 
+    console.log("OUVERTURE DU PUZZLE !");
+    const overlay = document.getElementById("overlay-phase");
+    if (overlay) {
+      overlay.classList.remove("hidden");
+    }
+
+    this.canvas = document.getElementById("phaseCanvas");
+    if (this.canvas) {
+      this.ctx = this.canvas.getContext("2d");
+      this.playerPhase = 180;
+      this.offset = 0;
+      this.isSolved = false;
+      this.animate();
+    }
+  },
+
+  close: function () {
+    document.getElementById("overlay-phase").classList.add("hidden");
+    if (this.animationId) cancelAnimationFrame(this.animationId);
+  },
+
+  updateVal: function (val) {
+    if (this.isSolved) return;
+    this.playerPhase = parseInt(val);
+    this.checkWin();
+  },
+
+  animate: function () {
+    if (!this.ctx) return;
+    this.ctx.clearRect(0, 0, 600, 300);
+    this.offset += 0.1;
+
+    this.drawWave("rgba(255, 50, 50, 0.5)", 0);
+    let rad = (this.playerPhase * Math.PI) / 180;
+    this.drawWave("#0f0", rad);
+
+    this.animationId = requestAnimationFrame(() => this.animate());
+  },
+
+  drawWave: function (color, shift) {
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = 3;
+    for (let x = 0; x < 600; x++) {
+      const y = 150 + Math.sin(x * 0.05 + this.offset + shift) * 50;
+      if (x === 0) this.ctx.moveTo(x, y);
+      else this.ctx.lineTo(x, y);
+    }
+    this.ctx.stroke();
+  },
+
+  checkWin: function () {
+    if (this.playerPhase < 15 || this.playerPhase > 345) {
+      if (!this.isSolved) {
+        this.isSolved = true;
+
+        const status = document.getElementById("phase-status");
+        status.innerText = "SYNCHRONISÉ !";
+        status.style.color = "#2ecc71";
+
+        setTimeout(() => {
+          this.close();
+
+          // ⭐ RÉCOMPENSE : Note DO
+          if (typeof GameState !== "undefined") {
+            GameState.addNote("do");
+          }
+
+          // Compléter l'objectif
+          if (typeof HintSystem !== "undefined") {
+            HintSystem.completeObjective("egaliser-pistes");
+          }
+
+          // Pensée
+          if (typeof GameState !== "undefined") {
+            GameState.showThought(
+              "J'ai les quotas, plus qu'à se pencher sur la table de mixage."
+            );
+          }
+
+          // Modale
+          const modalOverlay = document.getElementById("modal-overlay");
+          const modalImg = document.getElementById("modal-img");
+          const modalDesc = document.getElementById("modal-desc");
+
+          modalImg.src = "assets/img/instructions volume.png";
+          modalImg.style.display = "block";
+          modalImg.style.maxWidth = "100%";
+
+          modalDesc.innerHTML = `
+            <h2 style="color:#2ecc71; margin-top:0;">SIGNAL RÉTABLI</h2>
+            <p>L'interférence est supprimée.</p>
+            <p>✨ Note <strong>DO</strong> obtenue !</p>
+          `;
+
+          modalOverlay.classList.remove("hidden");
+        }, 1000);
+      }
+    }
+  },
+};
+
+/* ======== PUZZLE FADERS (TABLE DE MIXAGE) ======== */
 const FaderPuzzle = {
-  // La solution attendue (Valeurs entre 0 et 100)
-  // Astuce : Tu peux écrire ces chiffres sur un mur ou un post-it dans le jeu !
   solution: [75, 20, 100, 50],
-  tolerance: 10, // Marge d'erreur autorisée (ex: si cible 80, 75 à 85 est accepté)
+  tolerance: 10,
   isSolved: false,
 
   init: function () {
-    if (Logic.fusesFixed < 3) {
-      console.log("Pas de courant");
+    // Vérifier l'ordre
+    if (
+      typeof GameState !== "undefined" &&
+      !GameState.canAccessPuzzle("faders")
+    ) {
+      GameState.showNotYetMessage();
       return;
-    } else {
-      document.getElementById("overlay-faders").classList.remove("hidden");
     }
+
+    if (typeof Logic !== "undefined" && Logic.fusesFixed < 3) {
+      console.log("Pas de courant");
+      if (typeof GameState !== "undefined") {
+        GameState.showThought("Pas de courant pour l'instant.");
+      }
+      return;
+    }
+
+    document.getElementById("overlay-faders").classList.remove("hidden");
   },
 
   close: function () {
@@ -106,12 +224,10 @@ const FaderPuzzle = {
 
     let isCorrect = true;
 
-    // On vérifie les 4 faders
     for (let i = 1; i <= 4; i++) {
       let val = parseInt(document.getElementById("fader-" + i).value);
       let target = this.solution[i - 1];
 
-      // Si la valeur est trop loin de la cible
       if (val < target - this.tolerance || val > target + this.tolerance) {
         isCorrect = false;
       }
@@ -120,55 +236,65 @@ const FaderPuzzle = {
     const status = document.getElementById("fader-status");
 
     if (isCorrect) {
-      // VICTOIRE
       this.isSolved = true;
       status.innerHTML = "RÉGLAGES PARFAITS !";
       status.style.color = "#2ecc71";
 
-      // Son de succès
-      // new Audio('assets/sounds/success.mp3').play();
-
       setTimeout(() => {
-        alert("Bravo ! Tu as récupéré... ");
-        // Exemple : Ajouter un objet à l'inventaire
-        // Game.addToInventory('cle-usb');
         this.close();
+
+        // ⭐ RÉCOMPENSE : Note SOL
+        if (typeof GameState !== "undefined") {
+          GameState.addNote("sol");
+        }
+
+        // Compléter l'objectif
+        if (typeof HintSystem !== "undefined") {
+          HintSystem.completeObjective("regler-niveaux");
+        }
+
+        // Pensée
+        if (typeof GameState !== "undefined") {
+          GameState.showThought("Je devrais ajouter un peu de piano..");
+        }
       }, 1000);
     } else {
-      // ÉCHEC
       status.innerHTML = "MAUVAIS RÉGLAGES...";
       status.style.color = "#e74c3c";
 
-      // Petite secousse de la fenêtre
-      anime({
-        targets: ".fader-container",
-        translateX: [-5, 5, -5, 5, 0],
-        duration: 400,
-      });
+      if (typeof anime !== "undefined") {
+        anime({
+          targets: ".fader-container",
+          translateX: [-5, 5, -5, 5, 0],
+          duration: 400,
+        });
+      }
     }
   },
 };
 
-/* === PUZZLE SIMON (IMAGE CLAVIER) === */
-
+/* ======== PUZZLE SIMON ======== */
 const SimonPuzzle = {
-  // La séquence secrète basée sur tes noms de fichiers
-  // Séquence vidéo : Vert, Bleu Foncé, Bleu Ciel, Vert
   secretSequence: ["green", "darkblue", "lightblue", "green"],
-
   playerInput: [],
   isPlayingDemo: false,
   isSolved: false,
-  baseImage: "assets/img/keyboard_base.png", // Image par défaut
+  baseImage: "assets/img/keyboard_base.png",
 
- init: function () {
-    if (FaderPuzzle.isSolved === false) {
-        
-        return; 
+  init: function () {
+    // Vérifier l'ordre
+    if (
+      typeof GameState !== "undefined" &&
+      !GameState.canAccessPuzzle("simon")
+    ) {
+      GameState.showNotYetMessage();
+      return;
     }
+
     document.getElementById("overlay-simon").classList.remove("hidden");
     this.resetGame();
   },
+
   close: function () {
     document.getElementById("overlay-simon").classList.add("hidden");
   },
@@ -181,7 +307,6 @@ const SimonPuzzle = {
     document.getElementById("simon-img").src = this.baseImage;
   },
 
-  // 1. L'ordi joue la séquence
   startSequence: function () {
     if (this.isPlayingDemo || this.isSolved) return;
 
@@ -201,58 +326,45 @@ const SimonPuzzle = {
       }
       this.flashKey(this.secretSequence[i]);
       i++;
-    }, 1000); // 1 seconde entre chaque note
+    }, 1000);
   },
 
-  // Fonction qui change l'image pour simuler la lumière
   flashKey: function (colorName) {
     const img = document.getElementById("simon-img");
-
-    // On change la source pour l'image colorée
-    // Ex: assets/img/key_green.png
     img.src = `assets/img/key_${colorName}.png`;
 
-    // SON (Optionnel)
-    // new Audio(`assets/sounds/${colorName}.mp3`).play();
-
-    // Après 500ms, on remet l'image vierge
     setTimeout(() => {
       img.src = this.baseImage;
     }, 500);
   },
 
-  // 2. Quand le joueur clique sur une zone invisible
   playerClick: function (colorName) {
     if (this.isPlayingDemo || this.isSolved) return;
 
     if (document.getElementById("simon-status").innerText.includes("Appuie")) {
       this.flashKey(colorName);
-      return; // Juste pour tester le son/image
+      return;
     }
 
-    // Feedback visuel (la touche s'allume quand on clique)
     this.flashKey(colorName);
-
     this.playerInput.push(colorName);
 
-    // VÉRIFICATION
     const currentStep = this.playerInput.length - 1;
 
     if (this.playerInput[currentStep] !== this.secretSequence[currentStep]) {
-      // ERREUR
       document.getElementById("simon-status").innerText =
         "Fausse note ! Recommence.";
       document.getElementById("simon-status").style.color = "#e74c3c";
       this.playerInput = [];
 
-      // Petit effet de secousse
-      anime({
-        targets: ".simon-container",
-        translateX: [-10, 10, 0],
-        duration: 300,
-      });
+      if (typeof anime !== "undefined") {
+        anime({
+          targets: ".simon-container",
+          translateX: [-10, 10, 0],
+          duration: 300,
+        });
+      }
     } else {
-      // Si la séquence est finie et correcte
       if (this.playerInput.length === this.secretSequence.length) {
         this.victory();
       }
@@ -267,128 +379,133 @@ const SimonPuzzle = {
     setTimeout(() => {
       this.close();
 
-      // Ouvre la grande modale de victoire
+      // ⭐ RÉCOMPENSE : Note FA
+      if (typeof GameState !== "undefined") {
+        GameState.addNote("fa");
+      }
+
+      // Compléter l'objectif
+      if (typeof HintSystem !== "undefined") {
+        HintSystem.completeObjective("simon-puzzle");
+      }
+
+      // Pensée
+      if (typeof GameState !== "undefined") {
+        GameState.showThought(
+          "Il me manque juste une chose, je devrais me mettre au calme."
+        );
+      }
+
+      // ⭐ DÉBLOQUER L'ICÔNE PARTITION.EXE ⭐
+      const iconNotes = document.getElementById("icon-notes");
+      if (iconNotes) {
+        iconNotes.classList.remove("hidden");
+        console.log("🎼 Icône Partition.exe débloquée !");
+      }
+
       const modalOverlay = document.getElementById("modal-overlay");
       const modalImg = document.getElementById("modal-img");
       const modalDesc = document.getElementById("modal-desc");
 
-      // Utilise une image de victoire (ex: piano_ok.png ou une autre)
       modalImg.src = "assets/img/signal_ok.png";
       modalImg.style.display = "block";
 
       modalDesc.innerHTML = `
-                <h2 style="color:#2ecc71">PARTITION DÉCHIFFRÉE</h2>
-                <p>Tu as débloqué un nouvel indice !</p>
-            `;
+        <h2 style="color:#2ecc71">PARTITION DÉCHIFFRÉE</h2>
+        <p>✨ Note <strong>FA</strong> obtenue !</p>
+        <p>💡 Une nouvelle application est apparue sur l'ordinateur.</p>
+      `;
 
       modalOverlay.classList.remove("hidden");
     }, 1000);
   },
-  /* Dans l'objet SimonPuzzle... */
-
-    victory: function() {
-        this.isSolved = true;
-        document.getElementById('simon-status').innerText = "MÉLODIE CORRECTE !";
-        document.getElementById('simon-status').style.color = "#2ecc71";
-
-        setTimeout(() => {
-            this.close(); // On ferme le Simon
-
-            // 1. DÉBLOQUER L'ICÔNE SUR L'ORDINATEUR
-            const icon = document.getElementById('icon-notes');
-            if(icon) {
-                icon.classList.remove('hidden'); // L'icône apparaît !
-                // Petit effet visuel pour montrer qu'il y a du nouveau sur le PC
-                // (Optionnel : fait clignoter l'écran du PC dans le studio)
-            }
-
-            // 2. AFFICHER LA MODALE DE RÉCOMPENSE
-            const modalOverlay = document.getElementById('modal-overlay');
-            const modalImg = document.getElementById('modal-img');
-            const modalDesc = document.getElementById('modal-desc');
-
-            // Image de récompense (ex: Clé USB ou Fichier débloqué)
-            // Assure-toi d'avoir une image ou mets-en une temporaire
-            modalImg.src = "assets/img/icon_unlocked.png"; // Si tu n'as pas l'image, le texte suffira
-            modalImg.style.display = "block";
-
-            modalDesc.innerHTML = `
-                <h2 style="color:#2ecc71">LOGICIEL DÉVERROUILLÉ</h2>
-                <p>Une nouvelle icône "Partition.exe" est apparue sur le bureau de l'ordinateur.</p>
-            `;
-            
-            modalOverlay.classList.remove('hidden');
-
-        }, 1000);
-    }
 };
 
+/* ======== PUZZLE NOTES (FINAL) ======== */
 const NotesPuzzle = {
-   
-    sequence: ['re', 'do', 'sol', 'fa', 'mi'],
-    
-    currentStep: 0,
+  sequence: ["re", "do", "sol", "fa", "mi"],
+  currentStep: 0,
 
-    init: function() {
-        document.getElementById('overlay-notes').classList.remove('hidden');
-        this.reset();
-    },
-
-    close: function() {
-        document.getElementById('overlay-notes').classList.add('hidden');
-    },
-
-    reset: function() {
-        this.currentStep = 0;
-        document.getElementById('notes-status').innerText = "En attente...";
-        document.getElementById('notes-status').style.color = "#aaa";
-    },
-
-    check: function(noteClicked) {
-        // On regarde quelle note on attend à cette étape
-        const expectedNote = this.sequence[this.currentStep];
-
-        if (noteClicked === expectedNote) {
-            // --- BONNE NOTE ---
-            this.currentStep++;
-            
-            // Feedback visuel discret (optionnel)
-            document.getElementById('notes-status').innerText = "Note enregistrée...";
-            document.getElementById('notes-status').style.color = "#fff";
-
-            // Est-ce que c'est la fin ?
-            if (this.currentStep >= this.sequence.length) {
-                this.victory();
-            }
-        } else {
-            // --- MAUVAISE NOTE ---
-            // On remet tout à zéro direct !
-            this.currentStep = 0;
-            
-            // Message d'erreur
-            const status = document.getElementById('notes-status');
-            status.innerText = "Séquence incorrecte. Reset.";
-            status.style.color = "#e74c3c"; // Rouge
-            
-            // Petite secousse de la fenêtre
-            anime({ targets: '.notes-container', translateX: [-10, 10, 0], duration: 300 });
-        }
-    },
-
-    victory: function() {
-        // 1. Fermer le puzzle
-        this.close();
-
-        // 2. Ouvrir l'écran vidéo
-        const videoOverlay = document.getElementById('overlay-victory-video');
-        const video = document.getElementById('final-video');
-        
-        if(videoOverlay && video) {
-            videoOverlay.classList.remove('hidden');
-            // Lancer la vidéo
-            video.play().catch(e => console.log("Clic requis pour lancer la vidéo"));
-        } else {
-            alert("VICTOIRE ! (Vidéo introuvable)");
-        }
+  init: function () {
+    // Vérifier l'ordre
+    if (
+      typeof GameState !== "undefined" &&
+      !GameState.canAccessPuzzle("notes")
+    ) {
+      GameState.showNotYetMessage();
+      return;
     }
+
+    // Vérifier qu'on a toutes les notes
+    if (typeof GameState !== "undefined" && !GameState.hasAllNotes()) {
+      GameState.showThought(
+        "Il me manque encore des notes pour jouer le morceau..."
+      );
+      return;
+    }
+
+    document.getElementById("overlay-notes").classList.remove("hidden");
+    this.reset();
+  },
+
+  close: function () {
+    document.getElementById("overlay-notes").classList.add("hidden");
+  },
+
+  reset: function () {
+    this.currentStep = 0;
+    document.getElementById("notes-status").innerText = "En attente...";
+    document.getElementById("notes-status").style.color = "#aaa";
+  },
+
+  check: function (noteClicked) {
+    const expectedNote = this.sequence[this.currentStep];
+
+    if (noteClicked === expectedNote) {
+      this.currentStep++;
+
+      document.getElementById("notes-status").innerText = "Note enregistrée...";
+      document.getElementById("notes-status").style.color = "#fff";
+
+      if (this.currentStep >= this.sequence.length) {
+        this.victory();
+      }
+    } else {
+      this.currentStep = 0;
+
+      const status = document.getElementById("notes-status");
+      status.innerText = "Séquence incorrecte. Reset.";
+      status.style.color = "#e74c3c";
+
+      if (typeof anime !== "undefined") {
+        anime({
+          targets: ".notes-container",
+          translateX: [-10, 10, 0],
+          duration: 300,
+        });
+      }
+    }
+  },
+
+  victory: function () {
+    this.close();
+
+    // Compléter l'objectif
+    if (typeof HintSystem !== "undefined") {
+      HintSystem.completeObjective("jouer-morceau");
+    }
+
+    // Vidéo de victoire
+    const videoOverlay = document.getElementById("overlay-victory-video");
+    const video = document.getElementById("final-video");
+
+    if (videoOverlay && video) {
+      videoOverlay.classList.remove("hidden");
+      video.play().catch((e) => console.log("Clic requis"));
+    } else {
+      alert("VICTOIRE ! (Vidéo introuvable)");
+    }
+  },
 };
+
+console.log("✓ puzzles.js chargé - version complète avec Partition.exe");

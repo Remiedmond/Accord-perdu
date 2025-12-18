@@ -1,119 +1,174 @@
-const Game = {
-    inventory: [],
-    
-    init: function() {
-        console.log("Jeu initialisé");
-        
-        const uiLayer = document.getElementById('ui-layer');
-        if(uiLayer) {
-            uiLayer.style.opacity = '0'; 
-        }
-    },
+// ========== MAIN.JS - VERSION FINALE CORRIGÉE ==========
 
-    // === NOUVELLE FONCTION : DÉMARRAGE DU JEU ===
-    // Cette fonction est appelée par le onclick="" ou onended="" de la vidéo
-    startGame: function() {
-        console.log("Lancement du jeu...");
-        
-        // 1. Gérer la vidéo
-        const video = document.getElementById('intro-video');
-        if (video) {
-            video.pause(); // On s'assure que le son coupe
-        }
+var Game = {
+  inventory: [],
 
-        // 2. Afficher l'interface (Timer + Inventaire) avec une petite animation douce
-        const uiLayer = document.getElementById('ui-layer');
-        if(uiLayer) {
-            anime({
-                targets: uiLayer,
-                opacity: [0, 1],
-                duration: 1000,
-                easing: 'linear'
-            });
-        }
+  init: function () {
+    console.log("✓ Game.init() appelé");
 
-        // 3. Lancer le Timer (si le script timer.js est bien chargé)
-        if (typeof Timer !== 'undefined' && Timer.start) {
-            Timer.start();
-        }
-
-        // 4. Utiliser ta fonction de transition pour aller vers la ruelle
-        this.changeScene('scene-ruelle');
-    },
-
-    // Changer de salle avec une transition Anime.js
-    changeScene: function(sceneId) {
-        // La scène actuelle est celle qui a la classe 'active' (au début, c'est scene-accueil)
-        const currentScene = document.querySelector('.scene.active');
-        const nextScene = document.getElementById(sceneId);
-
-        if (!currentScene || !nextScene) return; // Sécurité
-
-        // Animation de sortie (Fade Out)
-        anime({
-            targets: currentScene,
-            opacity: 0,
-            duration: 800, // Un peu plus lent pour l'ambiance
-            easing: 'easeInOutQuad',
-            complete: () => {
-                // Une fois invisible, on change les classes
-                currentScene.classList.remove('active');
-                currentScene.classList.add('hidden');
-                
-                // On prépare la prochaine scène
-                nextScene.classList.remove('hidden');
-                nextScene.classList.add('active');
-                nextScene.style.opacity = 0; // On s'assure qu'elle est invisible avant le fade in
-                
-                // Animation d'entrée (Fade In)
-                anime({
-                    targets: nextScene,
-                    opacity: [0, 1],
-                    duration: 800,
-                    easing: 'easeInOutQuad'
-                });
-            }
-        });
-    },
-
-    examine: function(objet) {
-        if (objet === 'flyer') {
-            anime({
-                targets: '#item-flyer',
-                scale: [1, 1.2, 1],
-                duration: 300
-            });
-
-            // 2. Remplir la modale avec les infos du Flyer
-            const modalImg = document.getElementById('modal-img');
-            const modalDesc = document.getElementById('modal-desc');
-            const overlay = document.getElementById('modal-overlay');
-
-            // Attention au chemin : souvent "assets" avec un s, vérifie ton dossier
-            modalImg.src = 'assets/img/indice_flyer_zoom.png'; 
-            
-            // Le texte qui s'affiche sous l'image
-            modalDesc.innerHTML = "Un flyer froissé trouvé par terre.<br>On peut y lire une date griffonnée : <strong style='color:#f1c40f'>1204</strong>";
-
-            // 3. Afficher la modale
-            overlay.classList.remove('hidden');
-            
-            // Petite animation d'apparition de la modale
-            anime({
-                targets: '.modal-content',
-                scale: [0.8, 1],
-                opacity: [0, 1],
-                duration: 300,
-                easing: 'easeOutBack'
-            });
-        }
-    },
-
-    closeModal: function() {
-        // Cacher la modale
-        document.getElementById('modal-overlay').classList.add('hidden');
+    // UI visible
+    var uiLayer = document.getElementById("ui-layer");
+    if (uiLayer) {
+      uiLayer.style.opacity = "1";
     }
+
+    // Attacher les événements à la vidéo
+    this.attachVideoEvents();
+
+    console.log("✓ Jeu initialisé");
+  },
+
+  attachVideoEvents: function () {
+    var self = this;
+    var video = document.getElementById("intro-video");
+
+    if (video) {
+      // Événement clic sur la vidéo
+      video.onclick = function () {
+        console.log("📹 Clic sur vidéo détecté");
+        self.startGame();
+      };
+
+      // Événement fin de vidéo
+      video.onended = function () {
+        console.log("📹 Fin de vidéo détectée");
+        self.startGame();
+      };
+
+      console.log("✓ Événements vidéo attachés");
+    } else {
+      console.warn("⚠️ Vidéo #intro-video introuvable");
+    }
+  },
+
+  startGame: function () {
+    console.log("🚀 Game.startGame() appelé");
+
+    try {
+      // Arrêter la vidéo
+      var video = document.getElementById("intro-video");
+      if (video) {
+        video.pause();
+      }
+
+      // Masquer l'écran de démarrage si présent
+      var startScreen = document.getElementById("start-screen");
+      if (startScreen) {
+        startScreen.style.display = "none";
+      }
+
+      // Changer de scène
+      this.changeScene("scene-ruelle");
+    } catch (error) {
+      console.error("❌ Erreur dans startGame:", error);
+    }
+  },
+
+  changeScene: function (sceneId) {
+    console.log("🎬 Changement vers:", sceneId);
+
+    var currentScene = document.querySelector(".scene.active");
+    var nextScene = document.getElementById(sceneId);
+
+    if (!currentScene) {
+      console.error("❌ Scène actuelle introuvable");
+      return;
+    }
+
+    if (!nextScene) {
+      console.error("❌ Scène suivante introuvable:", sceneId);
+      return;
+    }
+
+    // Si anime.js n'est pas disponible
+    if (typeof anime === "undefined") {
+      console.log("⚠️ Anime.js non disponible, transition simple");
+      currentScene.classList.remove("active");
+      currentScene.classList.add("hidden");
+      nextScene.classList.remove("hidden");
+      nextScene.classList.add("active");
+      return;
+    }
+
+    // Animation avec anime.js
+    anime({
+      targets: currentScene,
+      opacity: 0,
+      duration: 800,
+      easing: "easeInOutQuad",
+      complete: function () {
+        currentScene.classList.remove("active");
+        currentScene.classList.add("hidden");
+
+        nextScene.classList.remove("hidden");
+        nextScene.classList.add("active");
+        nextScene.style.opacity = 0;
+
+        anime({
+          targets: nextScene,
+          opacity: [0, 1],
+          duration: 800,
+          easing: "easeInOutQuad",
+          complete: function () {
+            console.log("✓ Transition terminée");
+          },
+        });
+      },
+    });
+  },
+
+  examine: function (objet) {
+    if (objet === "flyer") {
+      if (typeof anime !== "undefined") {
+        anime({
+          targets: "#item-flyer",
+          scale: [1, 1.2, 1],
+          duration: 300,
+        });
+      }
+
+      var modalImg = document.getElementById("modal-img");
+      var modalDesc = document.getElementById("modal-desc");
+      var overlay = document.getElementById("modal-overlay");
+
+      if (modalImg) modalImg.src = "assets/img/indice_flyer_zoom.png";
+      if (modalDesc)
+        modalDesc.innerHTML =
+          "Un flyer froissé trouvé par terre.<br>On peut y lire une date griffonnée : <strong style='color:#f1c40f'>2612</strong>";
+      if (overlay) overlay.classList.remove("hidden");
+
+      if (typeof anime !== "undefined") {
+        anime({
+          targets: ".modal-content",
+          scale: [0.8, 1],
+          opacity: [0, 1],
+          duration: 300,
+          easing: "easeOutBack",
+        });
+      }
+    }
+  },
+
+  closeModal: function () {
+    var overlay = document.getElementById("modal-overlay");
+    if (overlay) {
+      overlay.classList.add("hidden");
+    }
+  },
 };
 
-// Lancer l'init au chargement
-window.onload = Game.init;
+// Rendre Game disponible globalement
+window.Game = Game;
+
+// Initialiser au chargement
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("📄 DOM chargé");
+    Game.init();
+  });
+} else {
+  console.log("📄 DOM déjà chargé");
+  Game.init();
+}
+
+console.log("✓ main.js chargé, Game disponible");

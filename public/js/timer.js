@@ -1,8 +1,7 @@
-// ======== SYSTÈME DE TIMER ========
-// À inclure dans votre HTML : <script src="js/timer.js"></script>
+// ======== SYSTÈME DE TIMER - VERSION CORRIGÉE ========
 
 const TimerSystem = {
-  timeRemaining: 45 * 60, // 45 minutes en secondes (modifiable)
+  timeRemaining: 15 * 60, // 45 minutes en secondes
   timerInterval: null,
   timeWarningThreshold: 5 * 60, // Seuil d'alerte à 5 minutes
 
@@ -13,14 +12,38 @@ const TimerSystem = {
     console.log("⏱️ Timer initialisé");
   },
 
-  // Créer l'affichage du timer dans l'interface
+  // Créer ou utiliser l'affichage du timer
   createTimerDisplay: function () {
-    if (!document.getElementById("timer")) {
-      const timer = document.createElement("div");
+    let timer = document.getElementById("timer");
+
+    if (!timer) {
+      // L'élément n'existe pas, on le crée
+      timer = document.createElement("div");
       timer.id = "timer";
-      timer.className = "timer-display";
-      document.getElementById("ui-layer").appendChild(timer);
+
+      const uiLayer = document.getElementById("ui-layer");
+      if (uiLayer) {
+        uiLayer.appendChild(timer);
+      } else {
+        document.body.appendChild(timer);
+      }
+
+      console.log("✓ Timer créé dynamiquement");
+    } else {
+      console.log("✓ Timer existant utilisé");
     }
+
+    // Ajouter la classe timer-display si elle n'est pas présente
+    if (!timer.classList.contains("timer-display")) {
+      timer.className = "timer-display";
+    }
+
+    // Forcer les styles de base (au cas où le CSS ne charge pas)
+    timer.style.position = "fixed";
+    timer.style.top = "20px";
+    timer.style.left = "20px";
+    timer.style.zIndex = "1000";
+
     this.updateDisplay();
   },
 
@@ -92,7 +115,6 @@ const TimerSystem = {
   // ============ ÉVÉNEMENTS ============
   onTimeWarning: function () {
     this.showTimerNotification("⚠️ Moins de 5 minutes !", "warning");
-    // Vous pouvez ajouter un son ici
   },
 
   onTimeUp: function () {
@@ -108,7 +130,7 @@ const TimerSystem = {
   // ============ ANIMATIONS ============
   animateTimer: function (type) {
     const timerEl = document.getElementById("timer");
-    if (!timerEl || !window.anime) return;
+    if (!timerEl || typeof anime === "undefined") return;
 
     if (type === "bonus") {
       anime({
@@ -135,7 +157,7 @@ const TimerSystem = {
     notif.textContent = message;
     document.body.appendChild(notif);
 
-    if (window.anime) {
+    if (typeof anime !== "undefined") {
       anime({
         targets: notif,
         translateX: [-300, 0],
@@ -196,12 +218,12 @@ const TimerSystem = {
       .join("");
 
     modal.innerHTML = `
-            <div class="timer-modal-container">
-                <h2>${title}</h2>
-                <div class="timer-modal-body">${content}</div>
-                <div class="timer-modal-buttons">${buttonsHTML}</div>
-            </div>
-        `;
+      <div class="timer-modal-container">
+        <h2>${title}</h2>
+        <div class="timer-modal-body">${content}</div>
+        <div class="timer-modal-buttons">${buttonsHTML}</div>
+      </div>
+    `;
 
     // Stocker les actions
     this.modalActions = buttons.map((btn) => btn.action);
@@ -225,6 +247,12 @@ const TimerSystem = {
 };
 
 // Auto-initialisation au chargement de la page
-window.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    TimerSystem.init();
+  });
+} else {
   TimerSystem.init();
-});
+}
+
+console.log("✓ timer.js chargé");

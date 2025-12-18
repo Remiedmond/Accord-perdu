@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="css/post-it.css" />
     <link rel="stylesheet" href="css/interference.css" />
     <link rel="stylesheet" href="css/mixage.css" />
-    <link rel="stylesheet" href="css/studio.css" />
     <link rel="stylesheet" href="css/simon.css" />
     <link rel="stylesheet" href="css/enigme.css" />
+    <link rel="stylesheet" href="css/notes_inventory.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
   </head>
@@ -29,8 +29,7 @@
     </div>
 
     <div id="ui-layer">
-      <div id="timer">23:55</div>
-      <div id="inventory"></div>
+      <div id="timer" class="timer-display">00:00</div>
     </div>
 
     <section id="scene-accueil" class="scene active">
@@ -45,7 +44,6 @@
       id="intro-video"
       src="assets/video/accueil.mp4"
       playsinline
-      onended="Game.startGame()"
     ></video>
   </div>
 </section>
@@ -139,6 +137,8 @@ function startVideoWithSound() {
       <img src="assets/img/bg_studio.png" class="bg-img" alt="Studio" />
 
       <div id="studio-darkness"></div>
+      <div id="studio-coin-1"></div>
+      <div id="studio-coin-2"></div>
 
       <div id="fuse-box" class="dropzone-fuse">
         <div id="slot-1" class="slot-light" onclick="Logic.removeFuse(1)"></div>
@@ -154,11 +154,6 @@ function startVideoWithSound() {
         <img src="assets/img/screen_boot.png" alt="Booting System..." />
         <div class="loading-bar"></div>
       </div>
-
-      <div id="note-mi-collectible" style="right: 15%; top: 40%; display: none">
-        ♪ MI
-      </div>
-
       <!--<div id="tracks-rack">
         <div id="drag-drums" class="draggable-item track-drums">Batterie</div>
         <div id="drag-bass" class="draggable-item track-bass">Basse</div>
@@ -389,13 +384,13 @@ function startVideoWithSound() {
           </button>
       </div>
 
+    <script src="js/game_state.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/hints.js"></script>
     <script src="js/ruelle_logic.js"></script>
     <script src="js/main.js"></script>
     <script src="js/puzzles.js"></script>
     <script src="js/drag_logic.js"></script>
-    <script src="js/phase_int.js"></script>
     <script src="js/studio_logic.js"></script>
   </body>
 </html>

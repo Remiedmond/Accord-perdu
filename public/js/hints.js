@@ -1,28 +1,26 @@
-// ======== SYSTÈME D'INDICES ET PIÈCES ========
+// ======== SYSTÈME D'INDICES ET PIÈCES - CORRIGÉ ========
 const HintSystem = {
-  // Configuration
   coins: 0,
   coinsPerHint: 1,
   timePenaltyMinutes: 2,
 
-  // Objectifs avec leurs indices progressifs
+  // TOUS les objectifs dans l'ordre du jeu
   objectives: {
     "entrer-studio": {
       name: "Entrer dans le studio",
       completed: false,
       hints: [
-        "Il doit y avoir un code quelque part dans la ruelle...",
-        "Cherchez un papier au sol, peut-être un flyer ?",
-        "Le code est inscrit sur le flyer : 1204",
+        "Trouvez 3 Lettres pour recréer le code.",
+        "Les lettres sont B, F et L. Le tag indique comment les utiliser.",
+        "B = 2, F = 6, L = 12",
       ],
       currentHintLevel: 0,
     },
     "allumer-studio": {
-      name: "Allumer les lumières du studio",
+      name: "Remettre le courant",
       completed: false,
       hints: [
         "Le studio est dans le noir... Il faut du courant.",
-        "Cherchez une boîte à fusibles dans la pièce.",
         "Placez les 3 fusibles dans la boîte pour allumer.",
       ],
       currentHintLevel: 0,
@@ -31,29 +29,57 @@ const HintSystem = {
       name: "Déverrouiller l'ordinateur",
       completed: false,
       hints: [
-        "L'ordinateur est verrouillé, il faut un mot de passe...",
-        "Des post-its sont éparpillés dans la pièce.",
-        "Le mot de passe est écrit sur les post-its : regardez bien !",
+        "L'ordinateur est verrouillé, Des post-its sont éparpillés dans la pièce.",
+        "L'ordre des post-its est important, le drop est avant le refrain.",
+        "Le mot de passe est : BEAT",
       ],
       currentHintLevel: 0,
     },
-    "collecter-note-mi": {
-      name: "Trouver la note de musique",
+    "egaliser-pistes": {
+      name: "Égaliser les pistes audio",
       completed: false,
       hints: [
-        "Une note de musique est cachée quelque part...",
-        "Essayez de débrancher des fusibles après avoir allumé l'ordinateur.",
-        "Débranchez exactement 2 fusibles pour révéler la note MI !",
+        "Ouvrez Signal.exe sur l'ordinateur.",
+        "Il faut synchroniser les deux ondes sonores.",
       ],
       currentHintLevel: 0,
     },
-    "resoudre-puzzles": {
-      name: "Résoudre les puzzles sonores",
+    "regler-niveaux": {
+      name: "Régler les niveaux",
       completed: false,
       hints: [
-        "L'ordinateur contient des applications pour traiter le son.",
-        "Ouvrez Signal.exe et réglez les paramètres correctement.",
-        "Utilisez aussi la table de mixage pour ajuster les niveaux.",
+        "Il faut maintenant régler la table de mixage.",
+        "Les valeurs correctes sont : BASS=75, GUIT=20, VOX=100, DRUM=50",
+      ],
+      currentHintLevel: 0,
+    },
+    "simon-puzzle": {
+      name: "Retrouver le rythme",
+      completed: false,
+      hints: [
+        "Chercher le piano.",
+        "Écoutez bien la séquence de notes.",
+        "Reproduisez la séquence : Vert, Bleu Foncé, Bleu Ciel, Vert",
+      ],
+      currentHintLevel: 0,
+    },
+    "trouver-inspiration": {
+      name: "Trouver l'inspiration",
+      completed: false,
+      hints: [
+        "L'inspiration vient dans la pénombre.",
+        "Essayez de débrancher 2 fusibles et attendez.",
+        "Débranchez exactement 2 fusibles et attendez 15 secondes.",
+      ],
+      currentHintLevel: 0,
+    },
+    "jouer-morceau": {
+      name: "Jouer le morceau",
+      completed: false,
+      hints: [
+        "Vous avez toutes les notes, il est temps de jouer !",
+        "Utilisez le puzzle des notes sur l'ordinateur.",
+        "La séquence est : Ré, Do, Sol, Fa, Mi",
       ],
       currentHintLevel: 0,
     },
@@ -61,7 +87,6 @@ const HintSystem = {
 
   currentObjective: "entrer-studio",
 
-  // ============ INITIALISATION ============
   init: function () {
     this.createHintButton();
     this.createCoinsDisplay();
@@ -85,7 +110,6 @@ const HintSystem = {
     document.getElementById("ui-layer").appendChild(display);
   },
 
-  // ============ GESTION DES PIÈCES ============
   addCoins: function (amount) {
     this.coins += amount;
     this.updateCoinsDisplay();
@@ -110,9 +134,8 @@ const HintSystem = {
     }
   },
 
-  // ============ GESTION DES OBJECTIFS ============
   completeObjective: function (objectiveId) {
-    console.log("🎯 Tentative de complétion objectif :", objectiveId);
+    console.log("🎯 Complétion objectif :", objectiveId);
 
     if (!this.objectives[objectiveId]) {
       console.warn("⚠️ Objectif introuvable :", objectiveId);
@@ -138,7 +161,11 @@ const HintSystem = {
       this.currentObjective = keys[currentIndex + 1];
       console.log("📋 Nouvel objectif :", this.currentObjective);
 
-      // Afficher le nouvel objectif
+      // Mettre à jour GameState
+      if (typeof GameState !== "undefined") {
+        GameState.completeCurrentObjective();
+      }
+
       setTimeout(() => {
         this.showNotification(
           `📋 Nouvel objectif : ${this.objectives[this.currentObjective].name}`,
@@ -154,7 +181,6 @@ const HintSystem = {
     return this.objectives[this.currentObjective];
   },
 
-  // ============ SYSTÈME D'INDICES ============
   openHintModal: function () {
     const objective = this.getCurrentObjective();
     if (!objective) {
@@ -224,7 +250,6 @@ const HintSystem = {
       return;
     }
 
-    // Payer avec pièces ou temps
     if (this.coins >= this.coinsPerHint) {
       this.coins -= this.coinsPerHint;
       this.updateCoinsDisplay();
@@ -235,15 +260,11 @@ const HintSystem = {
       }
     }
 
-    // Débloquer le prochain niveau
     objective.currentHintLevel++;
-
-    // Réafficher la modal avec le nouvel indice
     this.closeModal();
     setTimeout(() => this.openHintModal(), 300);
   },
 
-  // ============ MODAL GÉNÉRIQUE ============
   showModal: function (title, content, buttons) {
     const modal = document.createElement("div");
     modal.id = "hint-modal-overlay";
@@ -296,7 +317,6 @@ const HintSystem = {
     }
   },
 
-  // ============ NOTIFICATIONS ============
   showNotification: function (message, type) {
     const notif = document.createElement("div");
     notif.className = `hint-notification hint-notif-${type}`;
@@ -329,7 +349,6 @@ const HintSystem = {
   },
 };
 
-// Auto-initialisation
 window.addEventListener("DOMContentLoaded", () => {
   HintSystem.init();
 });

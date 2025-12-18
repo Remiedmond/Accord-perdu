@@ -1,8 +1,15 @@
-// ======== LOGIQUE ÉNIGME FUSIBLES STUDIO - SIMPLIFIÉ ========
+// ======== STUDIO LOGIC - ÉNIGME FUSIBLES AVEC TIMER 15s ========
 const StudioGame = {
   noteMI: false,
   fusiblesDebranches: 0,
   ordinateurDeverrouille: false,
+  timerMI: null,
+
+  // Pièces cachées dans le studio
+  coins: {
+    coin1: false,
+    coin2: false,
+  },
 
   init: function () {
     if (document.readyState === "loading") {
@@ -14,7 +21,7 @@ const StudioGame = {
 
   setup: function () {
     this.setupClicks();
-    this.createNoteDisplay();
+    this.setupCoins();
     console.log("🎹 Studio énigme fusibles OK");
   },
 
@@ -24,40 +31,57 @@ const StudioGame = {
       if (el) el.onclick = fn;
     };
 
-    // Note MI cliquable
-    attach("note-mi-collectible", () => this.collecterNoteMI());
+    // Note MI cliquable (non utilisée maintenant car direct dans inventaire)
+    // attach("note-mi-collectible", () => this.collecterNoteMI());
   },
 
-  // ========== AFFICHAGE DE LA NOTE ==========
-  createNoteDisplay: function () {
-    if (!document.getElementById("note-mi-display")) {
-      const container = document.createElement("div");
-      container.id = "note-mi-display";
-      container.className = "note-display";
-      document.getElementById("ui-layer").appendChild(container);
+  // ========== PIÈCES CACHÉES ==========
+  setupCoins: function () {
+    const attach = (id, coinKey) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.onclick = () => this.collectCoin(coinKey, el);
+      }
+    };
+
+    attach("studio-coin-1", "coin1");
+    attach("studio-coin-2", "coin2");
+  },
+
+  collectCoin: function (coinKey, element) {
+    if (this.coins[coinKey]) {
+      if (typeof GameState !== "undefined") {
+        GameState.showThought("Il n'y a plus rien ici.");
+      }
+      return;
     }
-  },
 
-  ajouterNoteUI: function () {
-    const container = document.getElementById("note-mi-display");
-    if (!container) return;
+    this.coins[coinKey] = true;
 
-    container.innerHTML = "♪ MI";
-    container.style.display = "flex";
+    if (typeof GameState !== "undefined") {
+      GameState.showThought("Tiens ? Une pièce cachée !");
+    }
+
+    if (typeof HintSystem !== "undefined") {
+      HintSystem.addCoins(1);
+    }
 
     if (window.anime) {
       anime({
-        targets: container,
-        scale: [0, 1],
-        rotate: [0, 360],
-        opacity: [0, 1],
+        targets: element,
+        scale: [1, 1.5, 0],
+        opacity: [1, 1, 0],
         duration: 600,
-        easing: "easeOutElastic(1, .8)",
+        complete: () => {
+          element.style.display = "none";
+        },
       });
+    } else {
+      element.style.display = "none";
     }
   },
 
-  // ========== ÉNIGME DES FUSIBLES ==========
+  // ========== ÉNIGME FUSIBLES AVEC TIMER 15s ==========
   onOrdinateurDeverrouille: function () {
     this.ordinateurDeverrouille = true;
     console.log("💻 Ordinateur déverrouillé - énigme fusibles activée");
@@ -69,8 +93,24 @@ const StudioGame = {
     this.fusiblesDebranches++;
     console.log(`⚡ Fusibles débranchés : ${this.fusiblesDebranches}/2`);
 
+    // Annuler le timer précédent si existant
+    if (this.timerMI) {
+      clearTimeout(this.timerMI);
+      this.timerMI = null;
+    }
+
+    // Si exactement 2 fusibles débranchés
     if (this.fusiblesDebranches === 2 && !this.noteMI) {
-      this.apparaitreNoteMI();
+      if (typeof GameState !== "undefined") {
+        GameState.showThought("Hmm... Attendons un peu...");
+      }
+
+      // ⭐ TIMER DE 15 SECONDES
+      this.timerMI = setTimeout(() => {
+        this.donnerNoteMI();
+      }, 15000); // 15 secondes
+
+      console.log("⏱️ Timer 15s démarré pour la note MI");
     }
   },
 
@@ -78,114 +118,40 @@ const StudioGame = {
     if (this.fusiblesDebranches > 0) {
       this.fusiblesDebranches--;
       console.log(`⚡ Fusible rebranché : ${this.fusiblesDebranches}/2`);
+
+      // Annuler le timer si on rebranche un fusible
+      if (this.timerMI) {
+        clearTimeout(this.timerMI);
+        this.timerMI = null;
+        console.log("⏱️ Timer annulé (fusible rebranché)");
+      }
     }
   },
 
-  apparaitreNoteMI: function () {
-    const noteMI = document.getElementById("note-mi-collectible");
-    if (!noteMI) {
-      console.warn("Note MI introuvable dans le HTML");
-      return;
-    }
-
-    noteMI.style.display = "flex";
-    noteMI.style.opacity = "0";
-
-    this.showThought("Étrange... Une note de musique est apparue !");
-
-    if (window.anime) {
-      anime({
-        targets: noteMI,
-        opacity: [0, 1],
-        scale: [0, 1],
-        rotate: [0, 720],
-        duration: 1000,
-        easing: "easeOutElastic(1, .6)",
-      });
-    } else {
-      noteMI.style.opacity = "1";
-    }
-  },
-
-  collecterNoteMI: function () {
-    if (this.noteMI) {
-      this.showThought("J'ai déjà la note MI.");
-      return;
-    }
+  donnerNoteMI: function () {
+    if (this.noteMI) return;
 
     this.noteMI = true;
-    this.ajouterNoteUI();
-    this.showThought("J'ai trouvé la note MI !");
 
-    const element = document.getElementById("note-mi-collectible");
-    if (element) {
-      if (window.anime) {
-        anime({
-          targets: element,
-          scale: 0,
-          opacity: 0,
-          duration: 400,
-          complete: () => (element.style.display = "none"),
-        });
-      } else {
-        element.style.display = "none";
-      }
+    // ⭐ RÉCOMPENSE : Note MI directement dans l'inventaire
+    if (typeof GameState !== "undefined") {
+      GameState.addNote("mi");
+      GameState.showThought("Eureka ! J'ai trouvé l'inspiration !");
     }
 
-    // Bonus si systèmes disponibles
+    // Compléter l'objectif
     if (typeof HintSystem !== "undefined") {
-      HintSystem.completeObjective("collecter-note-mi");
-    }
-    if (typeof TimerSystem !== "undefined") {
-      TimerSystem.addTime(30);
-    }
-  },
-
-  // ========== SYSTÈME DE PENSÉES ==========
-  showThought: function (text, duration = 3000) {
-    const container = document.getElementById("thoughts-container");
-    if (!container) {
-      const newContainer = document.createElement("div");
-      newContainer.id = "thoughts-container";
-      newContainer.className = "thoughts-hidden";
-      document.body.appendChild(newContainer);
-      this.showThought(text, duration);
-      return;
+      HintSystem.completeObjective("trouver-inspiration");
     }
 
-    container.textContent = text;
-    container.classList.remove("thoughts-hidden");
-    container.classList.add("thoughts-visible");
-
-    if (window.anime) {
-      anime({
-        targets: container,
-        translateX: "-50%",
-        translateY: [-20, 0],
-        opacity: [0, 1],
-        duration: 400,
-        easing: "easeOutQuad",
-      });
-    }
-
+    // Pensée finale
     setTimeout(() => {
-      if (window.anime) {
-        anime({
-          targets: container,
-          translateX: "-50%",
-          opacity: [1, 0],
-          duration: 300,
-          easing: "easeInQuad",
-          complete: () => {
-            container.classList.remove("thoughts-visible");
-            container.classList.add("thoughts-hidden");
-          },
-        });
-      } else {
-        container.classList.remove("thoughts-visible");
-        container.classList.add("thoughts-hidden");
+      if (typeof GameState !== "undefined") {
+        GameState.showThought("Il est temps d'attaquer la production.");
       }
-    }, duration);
+    }, 2000);
+
+    console.log("✅ Note MI donnée après 15 secondes !");
   },
 };
 
